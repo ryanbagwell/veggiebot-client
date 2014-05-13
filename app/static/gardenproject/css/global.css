@@ -1,0 +1,46 @@
+@import '../../third-party/normalize-css/normalize.css';
+/*! ------------------------------------------------
+ *	Bedrock
+ *	https://github.com/aebsr/bedrock
+ *
+ *	Copyright 2012-2013 Antoine Butler
+ *	Licensed WTF Public License
+ *	http://www.wtfpl.net/about/
+ *
+ *	Built by @aebsr
+ * -------------------------------------------------
+ */
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 100%;
+}
+#chart {
+  margin: 0 auto;
+  padding: 0;
+}
+#chart:before,
+#chart:after {
+  display: table;
+  content: "";
+}
+#chart:after {
+  clear: both;
+}
+#chart svg {
+  padding: 50px;
+}
+#chart .axis {
+  color: black;
+}
+#chart .axis path,
+#chart .axis line {
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges;
+}
+#chart .axis text {
+  font-size: 11px;
+}

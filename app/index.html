@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>gardenproject</title>
+        <meta name="description" content="">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="static/gardenproject/css/global.css">
+
+        <script src="static/third-party/modernizr/modernizr.js"></script>
+        <script src="static/third-party/requirejs/require.js"></script>
+        <script src="static/gardenproject/js/require.config.js"></script>
+    </head>
+
+    <body>
+
+        <aside id="chart">
+
+        </aside>
+
+        <script>
+            require(['main'], function(GardenProject) {
+                var gp = new GardenProject();
+            });
+        </script>
+
+
+    </body>
+</html>

@@ -1,0 +1,33 @@
+@import '../../third-party/normalize-css/normalize.css';
+@import '../../third-party/bedrock/bedrock.less';
+@import '_colors';
+@import '_fonts';
+@import '_mixins';
+
+
+#chart {
+    .clearfix();
+    margin: 0 auto;
+    padding: 0;
+
+
+    svg {
+        padding: 50px;
+    }
+
+
+
+    .axis {
+        color: black;
+
+        path, line {
+            fill: none;
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+
+        text {
+            font-size: 11px;
+        }
+    }
+}
