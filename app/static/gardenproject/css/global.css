@@ -17,9 +17,13 @@
   box-sizing: border-box;
   font-size: 100%;
 }
+.triangle {
+  width: 0;
+  height: 0;
+  display: inline-block;
+}
 #chart {
   margin: 0 auto;
-  padding: 0;
 }
 #chart:before,
 #chart:after {
@@ -43,4 +47,19 @@
 }
 #chart .axis text {
   font-size: 11px;
+}
+#chart .value-label {
+  font-size: 12px;
+  opacity: 0;
+  -webkit-transition: opacity 0.2s ease-in-out;
+  -moz-transition: opacity 0.2s ease-in-out;
+  -o-transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
+}
+#chart .node.text-visible .value-label {
+  opacity: 1;
+  -webkit-transition: opacity 0.2s ease-in-out;
+  -moz-transition: opacity 0.2s ease-in-out;
+  -o-transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
 }

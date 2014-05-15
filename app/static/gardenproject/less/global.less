@@ -1,5 +1,6 @@
 @import '../../third-party/normalize-css/normalize.css';
 @import '../../third-party/bedrock/bedrock.less';
+@import '../../third-party/granite/granite.less';
 @import '_colors';
 @import '_fonts';
 @import '_mixins';
@@ -8,7 +9,7 @@
 #chart {
     .clearfix();
     margin: 0 auto;
-    padding: 0;
+    //padding: 50px;
 
 
     svg {
@@ -28,6 +29,17 @@
 
         text {
             font-size: 11px;
+        }
+    }
+
+    .value-label {
+        font-size: 12px;
+        .fade-out(@time:.2s);
+    }
+
+    .node.text-visible {
+        .value-label {
+            .fade-in(@time: .2s);
         }
     }
 }

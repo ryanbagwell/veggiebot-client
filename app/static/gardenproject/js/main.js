@@ -20,13 +20,22 @@
         return _ref;
       }
 
+      Garden.prototype.growToSize = '25px';
+
+      Garden.prototype.dotSize = '5px';
+
       Garden.prototype.initialize = function(options) {
+        var _this = this;
         this.options = options;
         _.bindAll(this, 'drawChart', 'timeTickFormatter');
         this.gardenData = new GardenData();
         this.gardenData.on('reset', this.drawChart);
-        return this.gardenData.fetch({
+        this.gardenData.fetch({
           reset: true
+        });
+        return $(window).on('resize', function() {
+          _this.destroy();
+          return _this.drawChart();
         });
       };
 
@@ -40,14 +49,14 @@
         moistures = this.gardenData.map(function(model) {
           return model.get('moistureLevel');
         });
-        timeScale = d3.scale.linear().domain([d3.min(times), d3.max(times)]).range([0, 1000]);
-        moistureScale = d3.scale.linear().domain([500, 1023]).range([0, 500]);
+        timeScale = d3.scale.linear().domain([d3.min(times), d3.max(times)]).range([0, $(window).width() - 100]);
+        moistureScale = d3.scale.linear().domain([500, 1000]).range([0, 500]);
         this.chart = d3.select("#chart").append('svg');
-        this.chart.attr('width', '100%').attr('height', '500');
+        this.chart.attr('width', ($(window).width() - 100) + 'px').attr('height', '500');
         this.chart.text("Garden Soil Moisture").select('#chart');
         data = this.gardenData.filter(function(model) {
           var _ref1;
-          return (0 < (_ref1 = model.get('moistureLevel')) && _ref1 < 1023);
+          return (0 < (_ref1 = model.get('moistureLevel')) && _ref1 < 1000);
         }).map(function(model) {
           return {
             moisture: model.get('moistureLevel'),
@@ -59,12 +68,22 @@
           return timeScale(d.time);
         }).attr('cy', function(d) {
           return moistureScale(d.moisture);
-        }).attr('r', '2px').attr('fill', 'black');
-        this.chart.selectAll('circle.nodes').data(data).enter().append('svg.circle').attr('cx', function(d) {
-          return timeScale(d.time);
-        }).attr('cy', function(d) {
-          return moistureScale(d.moisture);
+        }).attr('r', this.dotSize).attr('fill', 'black').on('mouseover', function(data, i) {
+          d3.select(this.parentNode).attr('class', 'node text-visible');
+          return d3.select(this).transition().attr({
+            'r': '25px'
+          });
+        }).on('mouseout', function(data, i) {
+          d3.select(this.parentNode).attr('class', 'node');
+          return d3.select(this).transition().attr('r', '5px');
         });
+        node.append('text').attr('x', function(d) {
+          return timeScale(d.time);
+        }).attr('y', function(d) {
+          return moistureScale(d.moisture);
+        }).text(function(data, i) {
+          return data.moisture;
+        }).attr("text-anchor", "middle").attr('dy', '35px').attr('class', 'value-label');
         lines = _.map(this.chart.selectAll('circle')[0], function(circle, i, list) {
           try {
             return {
@@ -90,15 +109,35 @@
           'class': 'axis x',
           'transform': 'translate(0, 500)'
         }).call(timeAxis);
-        moistureAxis = d3.svg.axis().scale(moistureScale).orient('left').ticks(10);
-        return moistureAxisGroup = this.chart.append('g').attr({
+        moistureAxis = d3.svg.axis().scale(moistureScale).orient('left').ticks(10).tickFormat(function(num, i) {
+          return num;
+        });
+        moistureAxisGroup = this.chart.append('g').attr({
           "transform": "translate(0,0)",
           'class': 'axis y'
         }).call(moistureAxis);
+        return moistureAxisGroup.append('text').attr('class', 'label y').attr('text-anchor', 'end').attr("y", 6).attr('dy', '.75em').attr('transform', 'rotate(-90)').text('Saturated');
       };
 
       Garden.prototype.timeTickFormatter = function(timestamp) {
         return moment.unix(timestamp).tz('America/Chicago').format('ddd, hA');
+      };
+
+      Garden.prototype.growDot = function(data, i) {
+        var node;
+        node = d3.selectAll('g.node')[0][i];
+        return d3.select(node).select('circle').transition().attr('r', '25px');
+      };
+
+      Garden.prototype.shrinkDot = function(data, i) {
+        var node;
+        node = d3.selectAll('g.node')[0][i];
+        return d3.select(node).select('circle').transition().attr('r', this.dotSize);
+      };
+
+      Garden.prototype.destroy = function() {
+        $('svg').remove();
+        return this.chart = null;
       };
 
       return Garden;

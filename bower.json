@@ -13,6 +13,7 @@
     "raven-js": "https://raw.github.com/getsentry/raven-js/1.0.8/dist/1.0.8/raven.js",
     "d3": "~3.4.6",
     "moment": "~2.6.0",
-    "moment-timezone": "~0.0.6"
+    "moment-timezone": "~0.0.6",
+    "granite": "~1.1.4"
   }
 }

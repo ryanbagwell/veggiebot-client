@@ -11,6 +11,9 @@ define (require) ->
 
     class Garden extends Backbone.View
 
+        growToSize: '25px'
+        dotSize: '5px'
+
         initialize: (options) ->
             @options = options
 
@@ -23,6 +26,10 @@ define (require) ->
             @gardenData.fetch
                 reset: true
 
+            $(window).on 'resize', =>
+                @destroy()
+                @drawChart()
+
         drawChart: ->
 
             times = @gardenData.map (model) ->
@@ -33,23 +40,22 @@ define (require) ->
 
             timeScale = d3.scale.linear()
                 .domain([d3.min(times), d3.max(times)])
-                .range([0, 1000])
+                .range([0, $(window).width()-100])
 
-            moistureScale = d3.scale.linear()
-                .domain([500, 1023])
-                .range([0, 500])
+            moistureScale = d3.scale.linear().domain([500, 1000]).range([0, 500])
+
 
             @chart = d3.select("#chart")
                 .append('svg')
 
-            @chart.attr('width', '100%')
+            @chart.attr('width', ($(window).width() - 100) + 'px')
                 .attr('height', '500')
 
             @chart.text("Garden Soil Moisture").select('#chart')
 
             # Filter out levels that are outside of our scope
             data = @gardenData.filter( (model) ->
-                        (0 < model.get('moistureLevel') < 1023)
+                        (0 < model.get('moistureLevel') < 1000)
                 ).map (model) ->
                     {moisture: model.get('moistureLevel'), time: moment.utc(model.get 'time').unix()}
 
@@ -62,15 +68,23 @@ define (require) ->
                 .attr('cx', (d) ->
                     timeScale(d.time))
                 .attr('cy', (d) -> moistureScale(d.moisture) )
-                .attr('r', '2px')
-                .attr('fill', 'black')
+                .attr('r', @dotSize)
+                .attr('fill', 'black').on('mouseover', (data, i) ->
+                    d3.select(@parentNode).attr('class', 'node text-visible')
+                    d3.select(@).transition().attr 'r':'25px'
+                ).on('mouseout', (data, i) ->
+                    d3.select(@parentNode).attr('class', 'node')
+                    d3.select(@).transition().attr 'r', '5px'
+                )
 
-            @chart.selectAll('circle.nodes')
-                .data(data)
-                .enter()
-                .append('svg.circle')
-                .attr('cx', (d) -> timeScale(d.time))
-                .attr('cy', (d) -> moistureScale(d.moisture) )
+            node.append('text')
+                .attr('x', (d) -> timeScale(d.time))
+                .attr('y', (d) -> moistureScale(d.moisture))
+                .text((data, i) ->
+                    data.moisture
+                ).attr("text-anchor", "middle")
+                .attr('dy', '35px')
+                .attr('class', 'value-label')
 
             lines = _.map @chart.selectAll('circle')[0], (circle, i, list) ->
                 try
@@ -100,16 +114,38 @@ define (require) ->
                 'transform': 'translate(0, 500)'
             ).call(timeAxis)
 
-            moistureAxis = d3.svg.axis().scale(moistureScale).orient('left').ticks(10)
+            moistureAxis = d3.svg.axis().scale(moistureScale).orient('left').ticks(10).tickFormat (num, i) ->
+                    num
+                    #1000 - num + 500
 
             moistureAxisGroup = @chart.append('g').attr(
                 "transform":"translate(0,0)"
                 'class':'axis y'
             ).call(moistureAxis)
 
+            moistureAxisGroup.append('text')
+                .attr('class', 'label y')
+                .attr('text-anchor', 'end')
+                .attr("y", 6)
+                .attr('dy', '.75em')
+                .attr('transform', 'rotate(-90)')
+                .text('Saturated')
+
 
         timeTickFormatter: (timestamp)->
             moment.unix(timestamp).tz('America/Chicago').format('ddd, hA')
+
+        growDot: (data, i) ->
+            node = d3.selectAll('g.node')[0][i]
+            d3.select(node).select('circle').transition().attr 'r', '25px'
+
+        shrinkDot: (data, i) ->
+            node = d3.selectAll('g.node')[0][i]
+            d3.select(node).select('circle').transition().attr 'r', @dotSize
+
+        destroy: ->
+            $('svg').remove()
+            @chart = null
 
 
 

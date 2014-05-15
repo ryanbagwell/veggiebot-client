@@ -19,7 +19,7 @@
         if (window.location.host === 'localhost') {
           return 'static/gardenproject/test/garden-data.json';
         }
-        return 'http://192.168.10.16/garden-data.json';
+        return 'http://garden.ryanbagwell.com/static/gardenproject/data/garden-data.json';
       };
 
       return DataCollection;
