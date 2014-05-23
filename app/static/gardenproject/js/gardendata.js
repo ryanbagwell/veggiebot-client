@@ -15,12 +15,7 @@
         return _ref;
       }
 
-      DataCollection.prototype.url = function() {
-        if (window.location.host === 'localhost') {
-          return 'static/gardenproject/test/garden-data.json';
-        }
-        return 'http://garden.ryanbagwell.com/static/gardenproject/data/garden-data.json';
-      };
+      DataCollection.prototype.url = 'http://garden.ryanbagwell.com/static/gardenproject/data/garden-data.json';
 
       return DataCollection;
 

@@ -32,6 +32,7 @@ define (require) ->
 
         drawChart: ->
 
+
             times = @gardenData.map (model) ->
                     time = model.get('time')
                     moment.utc(time).unix()
@@ -55,16 +56,61 @@ define (require) ->
 
             # Filter out levels that are outside of our scope
             data = @gardenData.filter( (model) ->
-                        (0 < model.get('moistureLevel') < 1000)
+                        (500 < model.get('moistureLevel') < 1000)
                 ).map (model) ->
                     {moisture: model.get('moistureLevel'), time: moment.utc(model.get 'time').unix()}
 
-            node = @chart.selectAll('circle.node')
+            # Calculate how many data points to display
+            # depending on our width
+            maxPoints = _.min([Math.ceil($(window).width() * 100 / 1500), 100])
+
+            if maxPoints < 100
+
+                data = data.filter (model, i) ->
+                    (i % Math.ceil(100/maxPoints))
+
+            zones = @chart.append('g').attr(
+                class: 'zones'
+                width: '100%'
+            )
+
+            dangerZone = zones.append('rect')
+                .attr
+                    class: 'death-valley'
+                    x: 0
+                    y: 400
+                    width: @chart.attr 'width'
+                    height: 100
+                    fill: 'red'
+                    opacity: .5
+
+            cautionZone = zones.append('rect')
+                .attr
+                    class: 'caution'
+                    x: 0
+                    y: 200
+                    width: '100%'
+                    height: 200
+                    fill: '#e3b102'
+                    opacity: .5
+
+            okZone = zones.append('rect')
+                .attr
+                    class: 'ok'
+                    x: 0
+                    y: 0
+                    width: '100%'
+                    height: 200
+                    fill: 'green'
+                    opacity: .5
+
+
+            circleContainer = @chart.selectAll('circle.node')
                 .data(data)
                 .enter().append('g')
-                .attr('class', 'node')
+                .attr('class', 'circle-container')
 
-            node.append('svg:circle')
+            circleContainer.append('svg:circle')
                 .attr('cx', (d) ->
                     timeScale(d.time))
                 .attr('cy', (d) -> moistureScale(d.moisture) )
@@ -77,7 +123,7 @@ define (require) ->
                     d3.select(@).transition().attr 'r', '5px'
                 )
 
-            node.append('text')
+            circleContainer.append('text')
                 .attr('x', (d) -> timeScale(d.time))
                 .attr('y', (d) -> moistureScale(d.moisture))
                 .text((data, i) ->
@@ -107,16 +153,14 @@ define (require) ->
                 .style('stroke', 'black')
 
 
-            timeAxis = d3.svg.axis().scale(timeScale).orient('bottom').tickFormat(@timeTickFormatter)
+            timeAxis = d3.svg.axis().scale(timeScale).orient('bottom').ticks(Math.floor($(window).width() / 100)).tickFormat(@timeTickFormatter)
 
             timeAxisGroup = @chart.append('g').attr(
                 'class':'axis x'
                 'transform': 'translate(0, 500)'
             ).call(timeAxis)
 
-            moistureAxis = d3.svg.axis().scale(moistureScale).orient('left').ticks(10).tickFormat (num, i) ->
-                    num
-                    #1000 - num + 500
+            moistureAxis = d3.svg.axis().scale(moistureScale).orient('left').ticks(10).tickFormat (num, i) -> num
 
             moistureAxisGroup = @chart.append('g').attr(
                 "transform":"translate(0,0)"
@@ -130,6 +174,9 @@ define (require) ->
                 .attr('dy', '.75em')
                 .attr('transform', 'rotate(-90)')
                 .text('Saturated')
+
+
+
 
 
         timeTickFormatter: (timestamp)->

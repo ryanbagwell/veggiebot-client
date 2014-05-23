@@ -40,7 +40,7 @@
       };
 
       Garden.prototype.drawChart = function() {
-        var data, lines, moistureAxis, moistureAxisGroup, moistureScale, moistures, node, timeAxis, timeAxisGroup, timeScale, times;
+        var cautionZone, circleContainer, dangerZone, data, lines, maxPoints, moistureAxis, moistureAxisGroup, moistureScale, moistures, okZone, timeAxis, timeAxisGroup, timeScale, times, zones;
         times = this.gardenData.map(function(model) {
           var time;
           time = model.get('time');
@@ -56,15 +56,52 @@
         this.chart.text("Garden Soil Moisture").select('#chart');
         data = this.gardenData.filter(function(model) {
           var _ref1;
-          return (0 < (_ref1 = model.get('moistureLevel')) && _ref1 < 1000);
+          return (500 < (_ref1 = model.get('moistureLevel')) && _ref1 < 1000);
         }).map(function(model) {
           return {
             moisture: model.get('moistureLevel'),
             time: moment.utc(model.get('time')).unix()
           };
         });
-        node = this.chart.selectAll('circle.node').data(data).enter().append('g').attr('class', 'node');
-        node.append('svg:circle').attr('cx', function(d) {
+        maxPoints = _.min([Math.ceil($(window).width() * 100 / 1500), 100]);
+        if (maxPoints < 100) {
+          data = data.filter(function(model, i) {
+            return i % Math.ceil(100 / maxPoints);
+          });
+        }
+        zones = this.chart.append('g').attr({
+          "class": 'zones',
+          width: '100%'
+        });
+        dangerZone = zones.append('rect').attr({
+          "class": 'death-valley',
+          x: 0,
+          y: 400,
+          width: this.chart.attr('width'),
+          height: 100,
+          fill: 'red',
+          opacity: .5
+        });
+        cautionZone = zones.append('rect').attr({
+          "class": 'caution',
+          x: 0,
+          y: 200,
+          width: '100%',
+          height: 200,
+          fill: '#e3b102',
+          opacity: .5
+        });
+        okZone = zones.append('rect').attr({
+          "class": 'ok',
+          x: 0,
+          y: 0,
+          width: '100%',
+          height: 200,
+          fill: 'green',
+          opacity: .5
+        });
+        circleContainer = this.chart.selectAll('circle.node').data(data).enter().append('g').attr('class', 'circle-container');
+        circleContainer.append('svg:circle').attr('cx', function(d) {
           return timeScale(d.time);
         }).attr('cy', function(d) {
           return moistureScale(d.moisture);
@@ -77,7 +114,7 @@
           d3.select(this.parentNode).attr('class', 'node');
           return d3.select(this).transition().attr('r', '5px');
         });
-        node.append('text').attr('x', function(d) {
+        circleContainer.append('text').attr('x', function(d) {
           return timeScale(d.time);
         }).attr('y', function(d) {
           return moistureScale(d.moisture);
@@ -104,7 +141,7 @@
         }).attr('y2', function(d) {
           return d.target[1];
         }).style('stroke', 'black');
-        timeAxis = d3.svg.axis().scale(timeScale).orient('bottom').tickFormat(this.timeTickFormatter);
+        timeAxis = d3.svg.axis().scale(timeScale).orient('bottom').ticks(Math.floor($(window).width() / 100)).tickFormat(this.timeTickFormatter);
         timeAxisGroup = this.chart.append('g').attr({
           'class': 'axis x',
           'transform': 'translate(0, 500)'

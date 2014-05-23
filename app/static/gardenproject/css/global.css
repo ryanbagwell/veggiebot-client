@@ -34,7 +34,7 @@
   clear: both;
 }
 #chart svg {
-  padding: 50px;
+  padding: 50px 50px 50px 50px;
 }
 #chart .axis {
   color: black;
@@ -62,4 +62,10 @@
   -moz-transition: opacity 0.2s ease-in-out;
   -o-transition: opacity 0.2s ease-in-out;
   transition: opacity 0.2s ease-in-out;
+}
+#chart .zones {
+  z-index: 1;
+}
+#chart .circle-container {
+  z-index: 2;
 }

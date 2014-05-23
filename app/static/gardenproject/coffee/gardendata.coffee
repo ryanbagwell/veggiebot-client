@@ -6,10 +6,9 @@ define (require) ->
 
     class DataCollection extends Backbone.Collection
 
-        url: ->
+        url: 'http://garden.ryanbagwell.com/static/gardenproject/data/garden-data.json'
 
-            return 'static/gardenproject/test/garden-data.json' if window.location.host is 'localhost'
 
-            'http://garden.ryanbagwell.com/static/gardenproject/data/garden-data.json'
+
 
 

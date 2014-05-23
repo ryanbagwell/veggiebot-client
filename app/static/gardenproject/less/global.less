@@ -13,10 +13,8 @@
 
 
     svg {
-        padding: 50px;
+        padding: 50px 50px 50px 50px;
     }
-
-
 
     .axis {
         color: black;
@@ -41,5 +39,13 @@
         .value-label {
             .fade-in(@time: .2s);
         }
+    }
+
+    .zones {
+        z-index: 1;
+    }
+
+    .circle-container {
+        z-index: 2;
     }
 }
