@@ -9,7 +9,7 @@ require.config
         'backbone': '../../third-party/backbone/backbone'
         'underscore': '../../third-party/underscore/underscore-min'
         'd3': '../../third-party/d3/d3.min'
-        'nvd3': '../../third-party/nvd3/nvd3.min'
+        'nvd3': '../../third-party/nvd3/nv.d3.min'
         'moment':'../../third-party/moment/moment'
         'moment-timezone': '../../third-party/moment-timezone/moment-timezone'
 

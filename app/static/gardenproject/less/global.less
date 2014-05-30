@@ -6,46 +6,13 @@
 @import '_mixins';
 
 
-#chart {
+#chart1 {
     .clearfix();
-    margin: 0 auto;
-    //padding: 50px;
-
-
     svg {
-        padding: 50px 50px 50px 50px;
+      height: 500px;
+      margin: 10px;
+      min-width: 100px;
+      min-height: 100px;
     }
 
-    .axis {
-        color: black;
-
-        path, line {
-            fill: none;
-            stroke: black;
-            shape-rendering: crispEdges;
-        }
-
-        text {
-            font-size: 11px;
-        }
-    }
-
-    .value-label {
-        font-size: 12px;
-        .fade-out(@time:.2s);
-    }
-
-    .node.text-visible {
-        .value-label {
-            .fade-in(@time: .2s);
-        }
-    }
-
-    .zones {
-        z-index: 1;
-    }
-
-    .circle-container {
-        z-index: 2;
-    }
 }

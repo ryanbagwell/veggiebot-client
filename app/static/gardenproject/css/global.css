@@ -22,50 +22,17 @@
   height: 0;
   display: inline-block;
 }
-#chart {
-  margin: 0 auto;
-}
-#chart:before,
-#chart:after {
+#chart1:before,
+#chart1:after {
   display: table;
   content: "";
 }
-#chart:after {
+#chart1:after {
   clear: both;
 }
-#chart svg {
-  padding: 50px 50px 50px 50px;
-}
-#chart .axis {
-  color: black;
-}
-#chart .axis path,
-#chart .axis line {
-  fill: none;
-  stroke: black;
-  shape-rendering: crispEdges;
-}
-#chart .axis text {
-  font-size: 11px;
-}
-#chart .value-label {
-  font-size: 12px;
-  opacity: 0;
-  -webkit-transition: opacity 0.2s ease-in-out;
-  -moz-transition: opacity 0.2s ease-in-out;
-  -o-transition: opacity 0.2s ease-in-out;
-  transition: opacity 0.2s ease-in-out;
-}
-#chart .node.text-visible .value-label {
-  opacity: 1;
-  -webkit-transition: opacity 0.2s ease-in-out;
-  -moz-transition: opacity 0.2s ease-in-out;
-  -o-transition: opacity 0.2s ease-in-out;
-  transition: opacity 0.2s ease-in-out;
-}
-#chart .zones {
-  z-index: 1;
-}
-#chart .circle-container {
-  z-index: 2;
+#chart1 svg {
+  height: 500px;
+  margin: 10px;
+  min-width: 100px;
+  min-height: 100px;
 }

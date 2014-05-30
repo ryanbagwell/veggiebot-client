@@ -3,6 +3,7 @@ define (require) ->
     _ = require 'underscore'
     Backbone = require 'backbone'
     d3 = require 'd3'
+    nv = require 'nvd3'
     GardenData = require 'gardenData'
     moment = require 'moment'
     require 'moment-timezone'
@@ -20,199 +21,91 @@ define (require) ->
         initialize: (options) ->
             @options = options
 
-            _.bindAll @, 'drawChart', 'timeTickFormatter'
+            _.bindAll @, 'drawChart', 'getData'
 
             @gardenData = new GardenData()
 
-            @gardenData.on 'reset', @drawChart
+            @gardenData.on 'reset', =>
+                #console.log 'reset'
+                nv.addGraph(@drawChart)
 
             @gardenData.fetch
                 reset: true
 
-            $(window).on 'resize', =>
-                @destroy()
-                @drawChart()
 
         drawChart: ->
 
+            data = @getData()
 
             times = @gardenData.map (model) ->
-                    time = model.get('time')
-                    moment.utc(time).unix()
+                t = model.get 'time'
+                moment.utc(t).unix()
 
-            # Calculate how many data points to display
-            # depending on our width
-            maxPoints = _.min([Math.ceil($(window).width() * 100 / 1500), 100])
-            if maxPoints < 100
-
-                data = @gardenData.filter (model, i) ->
-                    (i % Math.ceil(100/maxPoints))
-
-            else
-                data = @gardenData
-
-            sensor1Data = data.filter( (model) ->
-                        (500 < model.get('sensor1') < 1000)
-                ).map (model) ->
-                    moisture: model.get('sensor1')
-                    time: moment.utc(model.get 'time').unix()
-
-            sensor2Data = data.filter( (model) ->
-                        (500 < model.get('sensor2') < 1000)
-                ).map (model) ->
-                    moisture: model.get('sensor2')
-                    time: moment.utc(model.get 'time').unix()
-
-            @timeScale = d3.scale.linear()
-                .domain([d3.min(times), d3.max(times)])
-                .range([0, $(window).width()-110])
-
-            @sensorScale = d3.scale.linear().domain([1000, 500]).range([0, 500])
-
-
-            @chart = d3.select("#chart")
-                .append('svg')
-
-            @chart.attr('width', ($(window).width() - 100) + 'px')
-                .attr('height', '500')
-
-            @chart.text("Garden Soil Moisture").select('#chart')
-
-            zones = @chart.append('g').attr(
-                class: 'zones'
-                width: '100%'
-            )
-
-            dangerZone = zones.append('rect')
-                .attr
-                    class: 'death-valley'
-                    x: 0
-                    y: 400
-                    width: @chart.attr 'width'
-                    height: 100
-                    fill: 'red'
-                    opacity: .5
-
-            cautionZone = zones.append('rect')
-                .attr
-                    class: 'caution'
-                    x: 0
-                    y: 200
-                    width: '100%'
-                    height: 200
-                    fill: '#e3b102'
-                    opacity: .5
-
-            okZone = zones.append('rect')
-                .attr
-                    class: 'ok'
-                    x: 0
-                    y: 0
-                    width: '100%'
-                    height: 200
-                    fill: 'green'
-                    opacity: .5
-
-
-            @plotData sensor1Data, @sensor1Color, 'sensor-1'
-
-            @plotData sensor2Data, @sensor2Color, 'sensor-2'
-
-
-            timeAxis = d3.svg.axis().scale(@timeScale).orient('bottom').ticks(Math.floor($(window).width() / 100)).tickFormat(@timeTickFormatter)
-
-            timeAxisGroup = @chart.append('g').attr(
-                'class':'axis x'
-                'transform': 'translate(0, 500)'
-            ).call(timeAxis)
-
-            moistureAxis = d3.svg.axis().scale(@sensorScale).orient('left').ticks(10).tickFormat (num, i) -> num
-
-            moistureAxisGroup = @chart.append('g').attr(
-                "transform":"translate(0,0)"
-                'class':'axis y'
-            ).call(moistureAxis)
-
-            moistureAxisGroup.append('text')
-                .attr('class', 'label y')
-                .attr('text-anchor', 'end')
-                .attr("y", 6)
-                .attr('dy', '.75em')
-                .attr('transform', 'rotate(-90)')
-                .text('Saturated')
-
-
-        timeTickFormatter: (timestamp)->
-            moment.unix(timestamp).tz('America/Chicago').format('ddd, hA')
-
-        growDot: (data, i) ->
-            node = d3.selectAll('g.node')[0][i]
-            d3.select(node).select('circle').transition().attr 'r', '25px'
-
-        shrinkDot: (data, i) ->
-            node = d3.selectAll('g.node')[0][i]
-            d3.select(node).select('circle').transition().attr 'r', @dotSize
-
-        destroy: ->
-            $('svg').remove()
-            @chart = null
-
-        plotData: (data, color, cssClass) ->
-
-            container = @chart.selectAll('circle.node')
-                .data(data)
-                .enter().append('g')
-                .attr('class', cssClass)
-
-            container.append('svg:circle')
-                .attr('cx', (d) =>
-                    @timeScale(d.time)
+            chart = nv.models.linePlusBarChart()
+                .margin(
+                    top: 30
+                    right: 60
+                    bottom: 50
+                    left: 70
                 )
-                .attr('cy', (d) =>
-                    @sensorScale(d.moisture)
-                )
-                .attr('r', @dotSize)
-                .attr('fill', color).on('mouseover', (data, i) ->
-                    d3.select(@parentNode).attr('class', 'node text-visible')
-                    d3.select(@).transition().attr 'r':'25px'
-                ).on('mouseout', (data, i) ->
-                    d3.select(@parentNode).attr('class', 'node')
-                    d3.select(@).transition().attr 'r', '5px'
+                .x( (d, i) -> i)
+                .color(
+                    d3.scale.category10()
+                        .domain([d3.min(times), d3.max(times)])
+                        .range()
                 )
 
-            container.append('text')
-                .attr('x', (d) =>
-                    @timeScale(d.time)
-                )
-                .attr('y', (d) =>
-                    @sensorScale(d.moisture)
-                )
-                .text((data, i) ->
-                    data.moisture
-                ).attr("text-anchor", "middle")
-                .attr('dy', '35px')
-                .attr('class', 'value-label')
+            chart.xAxis.tickFormat( (d, i) ->
+                if i
+                    interval = (d3.max(times) - d3.min(times)) / 10
+                    timeIntervals = _.range d3.min(times), d3.max(times), interval
+                    t = timeIntervals[i]
+                else
+                    t = times[d]
+
+                moment.unix(t).tz('America/Chicago').format('ddd, hA')
+            ).showMaxMin(false);
+
+            chart.y1Axis.tickFormat d3.format(',f')
+
+            chart.y2Axis.tickFormat d3.format(',f')
+
+            #chart.bars.forceY([0]).padData(false)
+
+            d3.select('#chart1 svg')
+                .datum(data)
+                .transition().duration(500).call(chart)
+
+            nv.utils.windowResize(chart.update)
+
+            chart.dispatch.on 'stateChange', (e) ->
+                nv.log('New State:', JSON.stringify(e))
+
+            chart
+
+        getData: ->
+
+            dataSets = [
+                bar: false,
+                key: 'Sensor1'
+                originalKey: 'Sensor1'
+                values: @gardenData.map (model) ->
+                    x: moment.utc(model.get 'time').unix()
+                    y: model.get 'sensor1'
+            ,
+                bar: false,
+                key: 'Sensor2'
+                originalKey: 'Sensor2'
+                values: @gardenData.map (model) ->
+                    x: moment.utc(model.get 'time').unix()
+                    y: model.get 'sensor2'
+            ]
+
+            dataSets
 
 
-            lines = _.map @chart.selectAll('g.'+cssClass+' circle')[0], (circle, i, list) ->
-                try
-                    return {
-                        source: [$(circle).attr('cx'), $(circle).attr('cy')]
-                        target: [$(list[i+1]).attr('cx'), $(list[i+1]).attr('cy')]
-                    }
-                catch
 
-            lines.pop()
 
-            @chart.selectAll('.line')
-                .data(lines)
-                .enter()
-                .append('line')
-                .attr('x1', (d) -> d.source[0])
-                .attr('y1', (d) -> d.source[1])
-                .attr('x2', (d) -> d.target[0])
-                .attr('y2', (d) -> d.target[1])
-                .style('stroke', color)
 
 
 
