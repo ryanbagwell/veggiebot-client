@@ -11,9 +11,10 @@
     "modernizr": "~2.6.2",
     "normalize-css": "~2.1.2",
     "raven-js": "https://raw.github.com/getsentry/raven-js/1.0.8/dist/1.0.8/raven.js",
-    "d3": "~3.4.6",
+    "d3": "~3.3.13",
     "moment": "~2.6.0",
     "moment-timezone": "~0.0.6",
-    "granite": "~1.1.4"
+    "granite": "~1.1.4",
+    "nvd3": "~1.1.15-beta"
   }
 }

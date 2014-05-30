@@ -14,6 +14,9 @@ define (require) ->
         growToSize: '25px'
         dotSize: '5px'
 
+        sensor1Color: 'blue'
+        sensor2Color: '#407740'
+
         initialize: (options) ->
             @options = options
 
@@ -37,13 +40,34 @@ define (require) ->
                     time = model.get('time')
                     moment.utc(time).unix()
 
-            moistures = @gardenData.map (model) -> model.get 'moistureLevel'
+            # Calculate how many data points to display
+            # depending on our width
+            maxPoints = _.min([Math.ceil($(window).width() * 100 / 1500), 100])
+            if maxPoints < 100
 
-            timeScale = d3.scale.linear()
+                data = @gardenData.filter (model, i) ->
+                    (i % Math.ceil(100/maxPoints))
+
+            else
+                data = @gardenData
+
+            sensor1Data = data.filter( (model) ->
+                        (500 < model.get('sensor1') < 1000)
+                ).map (model) ->
+                    moisture: model.get('sensor1')
+                    time: moment.utc(model.get 'time').unix()
+
+            sensor2Data = data.filter( (model) ->
+                        (500 < model.get('sensor2') < 1000)
+                ).map (model) ->
+                    moisture: model.get('sensor2')
+                    time: moment.utc(model.get 'time').unix()
+
+            @timeScale = d3.scale.linear()
                 .domain([d3.min(times), d3.max(times)])
-                .range([0, $(window).width()-100])
+                .range([0, $(window).width()-110])
 
-            moistureScale = d3.scale.linear().domain([500, 1000]).range([0, 500])
+            @sensorScale = d3.scale.linear().domain([1000, 500]).range([0, 500])
 
 
             @chart = d3.select("#chart")
@@ -53,21 +77,6 @@ define (require) ->
                 .attr('height', '500')
 
             @chart.text("Garden Soil Moisture").select('#chart')
-
-            # Filter out levels that are outside of our scope
-            data = @gardenData.filter( (model) ->
-                        (500 < model.get('moistureLevel') < 1000)
-                ).map (model) ->
-                    {moisture: model.get('moistureLevel'), time: moment.utc(model.get 'time').unix()}
-
-            # Calculate how many data points to display
-            # depending on our width
-            maxPoints = _.min([Math.ceil($(window).width() * 100 / 1500), 100])
-
-            if maxPoints < 100
-
-                data = data.filter (model, i) ->
-                    (i % Math.ceil(100/maxPoints))
 
             zones = @chart.append('g').attr(
                 class: 'zones'
@@ -105,17 +114,65 @@ define (require) ->
                     opacity: .5
 
 
-            circleContainer = @chart.selectAll('circle.node')
+            @plotData sensor1Data, @sensor1Color, 'sensor-1'
+
+            @plotData sensor2Data, @sensor2Color, 'sensor-2'
+
+
+            timeAxis = d3.svg.axis().scale(@timeScale).orient('bottom').ticks(Math.floor($(window).width() / 100)).tickFormat(@timeTickFormatter)
+
+            timeAxisGroup = @chart.append('g').attr(
+                'class':'axis x'
+                'transform': 'translate(0, 500)'
+            ).call(timeAxis)
+
+            moistureAxis = d3.svg.axis().scale(@sensorScale).orient('left').ticks(10).tickFormat (num, i) -> num
+
+            moistureAxisGroup = @chart.append('g').attr(
+                "transform":"translate(0,0)"
+                'class':'axis y'
+            ).call(moistureAxis)
+
+            moistureAxisGroup.append('text')
+                .attr('class', 'label y')
+                .attr('text-anchor', 'end')
+                .attr("y", 6)
+                .attr('dy', '.75em')
+                .attr('transform', 'rotate(-90)')
+                .text('Saturated')
+
+
+        timeTickFormatter: (timestamp)->
+            moment.unix(timestamp).tz('America/Chicago').format('ddd, hA')
+
+        growDot: (data, i) ->
+            node = d3.selectAll('g.node')[0][i]
+            d3.select(node).select('circle').transition().attr 'r', '25px'
+
+        shrinkDot: (data, i) ->
+            node = d3.selectAll('g.node')[0][i]
+            d3.select(node).select('circle').transition().attr 'r', @dotSize
+
+        destroy: ->
+            $('svg').remove()
+            @chart = null
+
+        plotData: (data, color, cssClass) ->
+
+            container = @chart.selectAll('circle.node')
                 .data(data)
                 .enter().append('g')
-                .attr('class', 'circle-container')
+                .attr('class', cssClass)
 
-            circleContainer.append('svg:circle')
-                .attr('cx', (d) ->
-                    timeScale(d.time))
-                .attr('cy', (d) -> moistureScale(d.moisture) )
+            container.append('svg:circle')
+                .attr('cx', (d) =>
+                    @timeScale(d.time)
+                )
+                .attr('cy', (d) =>
+                    @sensorScale(d.moisture)
+                )
                 .attr('r', @dotSize)
-                .attr('fill', 'black').on('mouseover', (data, i) ->
+                .attr('fill', color).on('mouseover', (data, i) ->
                     d3.select(@parentNode).attr('class', 'node text-visible')
                     d3.select(@).transition().attr 'r':'25px'
                 ).on('mouseout', (data, i) ->
@@ -123,16 +180,21 @@ define (require) ->
                     d3.select(@).transition().attr 'r', '5px'
                 )
 
-            circleContainer.append('text')
-                .attr('x', (d) -> timeScale(d.time))
-                .attr('y', (d) -> moistureScale(d.moisture))
+            container.append('text')
+                .attr('x', (d) =>
+                    @timeScale(d.time)
+                )
+                .attr('y', (d) =>
+                    @sensorScale(d.moisture)
+                )
                 .text((data, i) ->
                     data.moisture
                 ).attr("text-anchor", "middle")
                 .attr('dy', '35px')
                 .attr('class', 'value-label')
 
-            lines = _.map @chart.selectAll('circle')[0], (circle, i, list) ->
+
+            lines = _.map @chart.selectAll('g.'+cssClass+' circle')[0], (circle, i, list) ->
                 try
                     return {
                         source: [$(circle).attr('cx'), $(circle).attr('cy')]
@@ -150,49 +212,7 @@ define (require) ->
                 .attr('y1', (d) -> d.source[1])
                 .attr('x2', (d) -> d.target[0])
                 .attr('y2', (d) -> d.target[1])
-                .style('stroke', 'black')
-
-
-            timeAxis = d3.svg.axis().scale(timeScale).orient('bottom').ticks(Math.floor($(window).width() / 100)).tickFormat(@timeTickFormatter)
-
-            timeAxisGroup = @chart.append('g').attr(
-                'class':'axis x'
-                'transform': 'translate(0, 500)'
-            ).call(timeAxis)
-
-            moistureAxis = d3.svg.axis().scale(moistureScale).orient('left').ticks(10).tickFormat (num, i) -> num
-
-            moistureAxisGroup = @chart.append('g').attr(
-                "transform":"translate(0,0)"
-                'class':'axis y'
-            ).call(moistureAxis)
-
-            moistureAxisGroup.append('text')
-                .attr('class', 'label y')
-                .attr('text-anchor', 'end')
-                .attr("y", 6)
-                .attr('dy', '.75em')
-                .attr('transform', 'rotate(-90)')
-                .text('Saturated')
-
-
-
-
-
-        timeTickFormatter: (timestamp)->
-            moment.unix(timestamp).tz('America/Chicago').format('ddd, hA')
-
-        growDot: (data, i) ->
-            node = d3.selectAll('g.node')[0][i]
-            d3.select(node).select('circle').transition().attr 'r', '25px'
-
-        shrinkDot: (data, i) ->
-            node = d3.selectAll('g.node')[0][i]
-            d3.select(node).select('circle').transition().attr 'r', @dotSize
-
-        destroy: ->
-            $('svg').remove()
-            @chart = null
+                .style('stroke', color)
 
 
 
