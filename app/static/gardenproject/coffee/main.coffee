@@ -66,9 +66,15 @@ define (require) ->
                 moment.unix(t).tz('America/Chicago').format('ddd, hA')
             ).showMaxMin(false);
 
-            chart.y1Axis.tickFormat d3.format(',f')
+            ## Temperature
+            chart.y1Axis.tickFormat (d, i) ->
+                d+"°F"
 
-            chart.y2Axis.tickFormat d3.format(',f')
+            ## Moisture
+            chart.y2Axis.tickFormat (d, i) ->
+                pct = Math.round((d / 1023) * 100)
+                pct + '%'
+
 
             #chart.bars.forceY([0]).padData(false)
 
@@ -87,14 +93,14 @@ define (require) ->
 
             dataSets = [
                 bar: false,
-                key: 'Moisture'
+                key: 'Soil Moisture'
                 originalKey: 'Moisture'
                 values: @gardenData.map (model) ->
                     x: moment.utc(model.get 'time').unix()
-                    y: model.get 'sensor1'
+                    y: model.get 'moistureLevel'
             ,
                 bar: true,
-                key: 'Temperature'
+                key: 'Soil Temperature'
                 originalKey: 'Temperature'
                 values: @gardenData.map (model) ->
                     x: moment.utc(model.get 'time').unix()

@@ -69,8 +69,14 @@
           }
           return moment.unix(t).tz('America/Chicago').format('ddd, hA');
         }).showMaxMin(false);
-        chart.y1Axis.tickFormat(d3.format(',f'));
-        chart.y2Axis.tickFormat(d3.format(',f'));
+        chart.y1Axis.tickFormat(function(d, i) {
+          return d + "°F";
+        });
+        chart.y2Axis.tickFormat(function(d, i) {
+          var pct;
+          pct = Math.round((d / 1023) * 100);
+          return pct + '%';
+        });
         d3.select('#chart1 svg').datum(data).transition().duration(500).call(chart);
         nv.utils.windowResize(chart.update);
         chart.dispatch.on('stateChange', function(e) {
@@ -84,17 +90,17 @@
         dataSets = [
           {
             bar: false,
-            key: 'Moisture',
+            key: 'Soil Moisture',
             originalKey: 'Moisture',
             values: this.gardenData.map(function(model) {
               return {
                 x: moment.utc(model.get('time')).unix(),
-                y: model.get('sensor1')
+                y: model.get('moistureLevel')
               };
             })
           }, {
             bar: true,
-            key: 'Temperature',
+            key: 'Soil Temperature',
             originalKey: 'Temperature',
             values: this.gardenData.map(function(model) {
               return {
