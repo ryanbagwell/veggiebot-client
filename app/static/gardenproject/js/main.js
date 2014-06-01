@@ -84,8 +84,8 @@
         dataSets = [
           {
             bar: false,
-            key: 'Sensor1',
-            originalKey: 'Sensor1',
+            key: 'Moisture',
+            originalKey: 'Moisture',
             values: this.gardenData.map(function(model) {
               return {
                 x: moment.utc(model.get('time')).unix(),
@@ -93,13 +93,13 @@
               };
             })
           }, {
-            bar: false,
-            key: 'Sensor2',
-            originalKey: 'Sensor2',
+            bar: true,
+            key: 'Temperature',
+            originalKey: 'Temperature',
             values: this.gardenData.map(function(model) {
               return {
                 x: moment.utc(model.get('time')).unix(),
-                y: model.get('sensor2')
+                y: model.get('temperature')
               };
             })
           }
