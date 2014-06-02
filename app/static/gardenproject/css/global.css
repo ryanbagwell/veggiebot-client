@@ -22,6 +22,9 @@
   height: 0;
   display: inline-block;
 }
+h1 {
+  text-align: center;
+}
 #chart1:before,
 #chart1:after {
   display: table;

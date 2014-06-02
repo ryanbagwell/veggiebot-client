@@ -38,7 +38,10 @@
           return nv.addGraph(_this.drawChart);
         });
         return this.gardenData.fetch({
-          reset: true
+          reset: true,
+          beforeSend: function(xhr) {
+            return xhr.setRequestHeader('X-ApiKey', 'F0MAdNgqeQWq47ukRCBMnQvL9M9n1bEIRGOodOw35ElnqPjd');
+          }
         });
       };
 
@@ -91,21 +94,21 @@
           {
             bar: false,
             key: 'Soil Moisture',
-            originalKey: 'Moisture',
+            originalKey: 'Soil Moisture',
             values: this.gardenData.map(function(model) {
               return {
                 x: moment.utc(model.get('time')).unix(),
-                y: model.get('moistureLevel')
+                y: model.get('SoilMoisture')
               };
             })
           }, {
             bar: true,
             key: 'Soil Temperature',
-            originalKey: 'Temperature',
+            originalKey: 'Soil Temperature',
             values: this.gardenData.map(function(model) {
               return {
                 x: moment.utc(model.get('time')).unix(),
-                y: model.get('temperature')
+                y: model.get('SoilTemperature')
               };
             })
           }

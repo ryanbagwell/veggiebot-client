@@ -31,6 +31,10 @@ define (require) ->
 
             @gardenData.fetch
                 reset: true
+                beforeSend: (xhr) ->
+                    xhr.setRequestHeader 'X-ApiKey',
+                        'F0MAdNgqeQWq47ukRCBMnQvL9M9n1bEIRGOodOw35ElnqPjd'
+
 
 
         drawChart: ->
@@ -94,17 +98,17 @@ define (require) ->
             dataSets = [
                 bar: false,
                 key: 'Soil Moisture'
-                originalKey: 'Moisture'
+                originalKey: 'Soil Moisture'
                 values: @gardenData.map (model) ->
                     x: moment.utc(model.get 'time').unix()
-                    y: model.get 'moistureLevel'
+                    y: model.get 'SoilMoisture'
             ,
                 bar: true,
                 key: 'Soil Temperature'
-                originalKey: 'Temperature'
+                originalKey: 'Soil Temperature'
                 values: @gardenData.map (model) ->
                     x: moment.utc(model.get 'time').unix()
-                    y: model.get 'temperature'
+                    y: model.get 'SoilTemperature'
             ]
 
             dataSets

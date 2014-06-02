@@ -9,6 +9,7 @@
       'nvd3': '../../third-party/nvd3/nv.d3.min',
       'moment': '../../third-party/moment/moment',
       'moment-timezone': '../../third-party/moment-timezone/moment-timezone',
+      'underscore.string': '../../third-party/underscore.string/dist/underscore.string.min',
       main: 'main',
       gardenData: 'gardendata',
       tzdata: 'data.timezone'
@@ -38,6 +39,10 @@
       'nvd3': {
         deps: ['d3'],
         exports: 'nv'
+      },
+      'underscore.string': {
+        deps: ['underscore'],
+        exports: '_.str'
       }
     }
   });
