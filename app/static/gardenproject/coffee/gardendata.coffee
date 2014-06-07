@@ -26,18 +26,17 @@ define (require) ->
 
         parse: (data, xhr) ->
 
-            console.log data.datastreams
-
             combined = {}
 
             _.each data.datastreams, (stream) ->
                 name = _.camelize(stream.id)
-                console.log name
 
                 _.each stream.datapoints, (point) ->
                     combined[point.at] = {} unless _.has(combined, point.at)
                     combined[point.at][name] = point.value
                     combined[point.at]['time'] = point.at
+
+            console.log _.values(combined)
 
             _.values combined
 

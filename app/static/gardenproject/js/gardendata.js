@@ -37,12 +37,10 @@
 
       DataCollection.prototype.parse = function(data, xhr) {
         var combined;
-        console.log(data.datastreams);
         combined = {};
         _.each(data.datastreams, function(stream) {
           var name;
           name = _.camelize(stream.id);
-          console.log(name);
           return _.each(stream.datapoints, function(point) {
             if (!_.has(combined, point.at)) {
               combined[point.at] = {};
@@ -51,6 +49,7 @@
             return combined[point.at]['time'] = point.at;
           });
         });
+        console.log(_.values(combined));
         return _.values(combined);
       };
 
