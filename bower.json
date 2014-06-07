@@ -16,6 +16,7 @@
     "moment-timezone": "~0.0.6",
     "granite": "~1.1.4",
     "nvd3": "~1.1.15-beta",
-    "bootstrap": "~3.1.1"
+    "bootstrap": "~3.1.1",
+    "underscore.string": "~2.3.3"
   }
 }

@@ -24,7 +24,7 @@
         var defaults;
         defaults = {
           datastreams: 'SoilMoisture,SoilTemperature',
-          start: moment.utc().subtract('days', 3).format(),
+          start: moment.utc().subtract('days', 2).format(),
           end: moment.utc().format(),
           interval: 1800
         };
@@ -32,7 +32,7 @@
       };
 
       DataCollection.prototype.url = function() {
-        return _.sprintf('https://api.xively.com/v2/feeds/342218851?datastreams=%(datastreams)s&start=%(start)s&end=%(end)s&%(interval)s', this.options);
+        return _.sprintf('https://api.xively.com/v2/feeds/342218851?datastreams=%(datastreams)s&start=%(start)s&interval=%(interval)s&interval_type=discrete', this.options);
       };
 
       DataCollection.prototype.parse = function(data, xhr) {
@@ -49,7 +49,6 @@
             return combined[point.at]['time'] = point.at;
           });
         });
-        console.log(_.values(combined));
         return _.values(combined);
       };
 

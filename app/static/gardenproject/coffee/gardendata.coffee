@@ -15,14 +15,14 @@ define (require) ->
 
             defaults =
                 datastreams: 'SoilMoisture,SoilTemperature'
-                start: moment.utc().subtract('days', 3).format()
+                start: moment.utc().subtract('days', 2).format()
                 end: moment.utc().format()
                 interval: 1800
 
             @options = _.extend defaults, options
 
         url: ->
-            _.sprintf 'https://api.xively.com/v2/feeds/342218851?datastreams=%(datastreams)s&start=%(start)s&end=%(end)s&%(interval)s', @options
+            _.sprintf 'https://api.xively.com/v2/feeds/342218851?datastreams=%(datastreams)s&start=%(start)s&interval=%(interval)s&interval_type=discrete', @options
 
         parse: (data, xhr) ->
 
@@ -35,8 +35,6 @@ define (require) ->
                     combined[point.at] = {} unless _.has(combined, point.at)
                     combined[point.at][name] = point.value
                     combined[point.at]['time'] = point.at
-
-            console.log _.values(combined)
 
             _.values combined
 

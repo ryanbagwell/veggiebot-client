@@ -80,11 +80,12 @@ define (require) ->
                 pct + '%'
 
 
-            #chart.bars.forceY([0]).padData(false)
 
             d3.select('#chart1 svg')
                 .datum(data)
                 .transition().duration(500).call(chart)
+
+            
 
             nv.utils.windowResize(chart.update)
 
