@@ -19,12 +19,22 @@ define (require) ->
             @options = _.extend defaults, options
 
         url: ->
-
             _.sprintf 'https://api.parse.com/1/classes/SoilData?limit=%(limit)s', @options
           
 
         parse: (data, xhr) ->
-            data.results
+            
+            results = []
+
+            _.map data.results, (obj) ->
+                console.log obj
+
+                if obj.moistureLevel > 100
+                    obj.moistureLevel = obj.moistureLevel / 1023 * 100
+
+                obj
+
+
 
         fetch: (options) ->
             defaults = 

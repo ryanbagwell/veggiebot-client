@@ -71,11 +71,8 @@ define (require) ->
 
             ## Moisture
             chart.y2Axis.tickFormat( (d, i) ->
-                pct = Math.round((d / 1023) * 100)
-                pct + '%'
+                Math.round(d) + '%'
             ).showMaxMin(false)
-
-
 
             d3.select('#chart1 svg')
                 .datum(data)

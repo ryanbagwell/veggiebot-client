@@ -69,9 +69,7 @@
           return parseInt(d) + "°F";
         }).showMaxMin(false);
         chart.y2Axis.tickFormat(function(d, i) {
-          var pct;
-          pct = Math.round((d / 1023) * 100);
-          return pct + '%';
+          return Math.round(d) + '%';
         }).showMaxMin(false);
         d3.select('#chart1 svg').datum(data).transition().duration(500).call(chart);
         nv.utils.windowResize(chart.update);

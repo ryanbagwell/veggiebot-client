@@ -33,7 +33,15 @@
       };
 
       DataCollection.prototype.parse = function(data, xhr) {
-        return data.results;
+        var results;
+        results = [];
+        return _.map(data.results, function(obj) {
+          console.log(obj);
+          if (obj.moistureLevel > 100) {
+            obj.moistureLevel = obj.moistureLevel / 1023 * 100;
+          }
+          return obj;
+        });
       };
 
       DataCollection.prototype.fetch = function(options) {
