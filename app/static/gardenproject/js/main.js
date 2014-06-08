@@ -37,16 +37,12 @@
         this.gardenData.on('reset', function() {
           return nv.addGraph(_this.drawChart);
         });
-        return this.gardenData.fetch({
-          reset: true,
-          beforeSend: function(xhr) {
-            return xhr.setRequestHeader('X-ApiKey', 'F0MAdNgqeQWq47ukRCBMnQvL9M9n1bEIRGOodOw35ElnqPjd');
-          }
-        });
+        return this.gardenData.fetch();
       };
 
       Garden.prototype.drawChart = function() {
-        var chart, data, times;
+        var chart, data, formatter, times, __;
+        __ = this;
         data = this.getData();
         times = this.gardenData.map(function(model) {
           var t;
@@ -61,25 +57,22 @@
         }).x(function(d, i) {
           return i;
         }).color(d3.scale.category10().domain([d3.min(times), d3.max(times)]).range());
-        chart.xAxis.tickFormat(function(d, i) {
-          var interval, t, timeIntervals;
-          if (i) {
-            interval = (d3.max(times) - d3.min(times)) / 10;
-            timeIntervals = _.range(d3.min(times), d3.max(times), interval);
-            t = timeIntervals[i];
-          } else {
-            t = times[d];
-          }
-          return moment.unix(t).tz('America/Chicago').format('ddd, hA');
-        }).showMaxMin(false);
+        formatter = _.bind(function(d, i) {
+          var m, t;
+          i = i ? i : d;
+          m = this.gardenData.at(i);
+          t = m.get('createdAt');
+          return moment(t).tz('America/Chicago').format("ddd, hA");
+        }, this);
+        chart.xAxis.tickFormat(formatter).showMaxMin(false);
         chart.y1Axis.tickFormat(function(d, i) {
-          return d + "°F";
-        });
+          return parseInt(d) + "°F";
+        }).showMaxMin(false);
         chart.y2Axis.tickFormat(function(d, i) {
           var pct;
           pct = Math.round((d / 1023) * 100);
           return pct + '%';
-        });
+        }).showMaxMin(false);
         d3.select('#chart1 svg').datum(data).transition().duration(500).call(chart);
         nv.utils.windowResize(chart.update);
         chart.dispatch.on('stateChange', function(e) {
@@ -97,8 +90,8 @@
             originalKey: 'Soil Moisture',
             values: this.gardenData.map(function(model) {
               return {
-                x: moment.utc(model.get('time')).unix(),
-                y: model.get('SoilMoisture')
+                x: moment.utc(model.get('createdAt')).unix(),
+                y: model.get('moistureLevel')
               };
             })
           }, {
@@ -107,8 +100,20 @@
             originalKey: 'Soil Temperature',
             values: this.gardenData.map(function(model) {
               return {
-                x: moment.utc(model.get('time')).unix(),
-                y: model.get('SoilTemperature')
+                x: moment.utc(model.get('createdAt')).unix(),
+                y: model.get('temperature')
+              };
+            })
+          }, {
+            bar: false,
+            key: 'Moisture Normalized',
+            originalKey: 'Moisture Normalized',
+            values: this.gardenData.map(function(model) {
+              var n;
+              n = model.get('normalizedMoisture');
+              return {
+                x: moment.utc(model.get('createdAt')).unix(),
+                y: n ? n : 0
               };
             })
           }

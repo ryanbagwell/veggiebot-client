@@ -13,29 +13,27 @@ define (require) ->
 
         initialize: (options) ->
 
-            defaults =
-                datastreams: 'SoilMoisture,SoilTemperature'
-                start: moment.utc().subtract('days', 2).format()
-                end: moment.utc().format()
-                interval: 1800
+            defaults = 
+                limit: 150
 
             @options = _.extend defaults, options
 
         url: ->
-            _.sprintf 'https://api.xively.com/v2/feeds/342218851?datastreams=%(datastreams)s&start=%(start)s&interval=%(interval)s&interval_type=discrete', @options
+
+            _.sprintf 'https://api.parse.com/1/classes/SoilData?limit=%(limit)s', @options
+          
 
         parse: (data, xhr) ->
+            data.results
 
-            combined = {}
-
-            _.each data.datastreams, (stream) ->
-                name = _.camelize(stream.id)
-
-                _.each stream.datapoints, (point) ->
-                    combined[point.at] = {} unless _.has(combined, point.at)
-                    combined[point.at][name] = point.value
-                    combined[point.at]['time'] = point.at
-
-            _.values combined
+        fetch: (options) ->
+            defaults = 
+                reset: true
+                beforeSend: (xhr) ->
+                    xhr.setRequestHeader 'X-Parse-Application-Id',
+                        '9NGEXKBz0x7p5SVPPXMbvMqDymXN5qCf387GpOE2'
+                    xhr.setRequestHeader 'X-Parse-REST-API-Key',
+                        'SDWvYNwDCPB6ImJ6eo1L28Nr5fzrA4fQysIdjz4Y'
+            super(defaults)
 
 

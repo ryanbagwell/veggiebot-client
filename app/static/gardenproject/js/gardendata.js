@@ -23,33 +23,29 @@
       DataCollection.prototype.initialize = function(options) {
         var defaults;
         defaults = {
-          datastreams: 'SoilMoisture,SoilTemperature',
-          start: moment.utc().subtract('days', 2).format(),
-          end: moment.utc().format(),
-          interval: 1800
+          limit: 150
         };
         return this.options = _.extend(defaults, options);
       };
 
       DataCollection.prototype.url = function() {
-        return _.sprintf('https://api.xively.com/v2/feeds/342218851?datastreams=%(datastreams)s&start=%(start)s&interval=%(interval)s&interval_type=discrete', this.options);
+        return _.sprintf('https://api.parse.com/1/classes/SoilData?limit=%(limit)s', this.options);
       };
 
       DataCollection.prototype.parse = function(data, xhr) {
-        var combined;
-        combined = {};
-        _.each(data.datastreams, function(stream) {
-          var name;
-          name = _.camelize(stream.id);
-          return _.each(stream.datapoints, function(point) {
-            if (!_.has(combined, point.at)) {
-              combined[point.at] = {};
-            }
-            combined[point.at][name] = point.value;
-            return combined[point.at]['time'] = point.at;
-          });
-        });
-        return _.values(combined);
+        return data.results;
+      };
+
+      DataCollection.prototype.fetch = function(options) {
+        var defaults;
+        defaults = {
+          reset: true,
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader('X-Parse-Application-Id', '9NGEXKBz0x7p5SVPPXMbvMqDymXN5qCf387GpOE2');
+            return xhr.setRequestHeader('X-Parse-REST-API-Key', 'SDWvYNwDCPB6ImJ6eo1L28Nr5fzrA4fQysIdjz4Y');
+          }
+        };
+        return DataCollection.__super__.fetch.call(this, defaults);
       };
 
       return DataCollection;
