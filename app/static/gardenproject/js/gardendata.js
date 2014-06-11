@@ -29,7 +29,7 @@
       };
 
       DataCollection.prototype.url = function() {
-        return _.sprintf('https://api.parse.com/1/classes/SoilData?limit=%(limit)s', this.options);
+        return _.sprintf('https://api.parse.com/1/classes/SoilData?limit=%(limit)s&order=-createdAt', this.options);
       };
 
       DataCollection.prototype.parse = function(data, xhr) {

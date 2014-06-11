@@ -19,7 +19,7 @@ define (require) ->
             @options = _.extend defaults, options
 
         url: ->
-            _.sprintf 'https://api.parse.com/1/classes/SoilData?limit=%(limit)s', @options
+            _.sprintf 'https://api.parse.com/1/classes/SoilData?limit=%(limit)s&order=-createdAt', @options
           
 
         parse: (data, xhr) ->
