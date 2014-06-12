@@ -102,18 +102,6 @@
                 y: model.get('temperature')
               };
             })
-          }, {
-            bar: false,
-            key: 'Moisture Normalized',
-            originalKey: 'Moisture Normalized',
-            values: this.gardenData.map(function(model) {
-              var n;
-              n = model.get('normalizedMoisture');
-              return {
-                x: moment.utc(model.get('createdAt')).unix(),
-                y: n ? n : 0
-              };
-            })
           }
         ];
         return dataSets;

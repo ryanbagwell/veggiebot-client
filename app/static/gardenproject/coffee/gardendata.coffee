@@ -14,12 +14,13 @@ define (require) ->
         initialize: (options) ->
 
             defaults = 
-                limit: 150
+                limit: 200
+                date: moment().subtract('days', 3).toISOString()
 
             @options = _.extend defaults, options
 
         url: ->
-            _.sprintf 'https://api.parse.com/1/classes/SoilData?limit=%(limit)s&order=-createdAt', @options
+            _.sprintf 'https://api.parse.com/1/classes/SoilData?limit=%(limit)s&order=createdAt&where={"updatedAt":{"$gt":{"__type":"Date", "iso":"%(date)s"}}}', @options
           
 
         parse: (data, xhr) ->
@@ -27,7 +28,7 @@ define (require) ->
             results = []
 
             _.map data.results, (obj) ->
-                console.log obj
+               
 
                 if obj.moistureLevel > 100
                     obj.moistureLevel = obj.moistureLevel / 1023 * 100

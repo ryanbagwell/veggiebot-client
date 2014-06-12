@@ -23,20 +23,20 @@
       DataCollection.prototype.initialize = function(options) {
         var defaults;
         defaults = {
-          limit: 150
+          limit: 200,
+          date: moment().subtract('days', 3).toISOString()
         };
         return this.options = _.extend(defaults, options);
       };
 
       DataCollection.prototype.url = function() {
-        return _.sprintf('https://api.parse.com/1/classes/SoilData?limit=%(limit)s&order=-createdAt', this.options);
+        return _.sprintf('https://api.parse.com/1/classes/SoilData?limit=%(limit)s&order=createdAt&where={"updatedAt":{"$gt":{"__type":"Date", "iso":"%(date)s"}}}', this.options);
       };
 
       DataCollection.prototype.parse = function(data, xhr) {
         var results;
         results = [];
         return _.map(data.results, function(obj) {
-          console.log(obj);
           if (obj.moistureLevel > 100) {
             obj.moistureLevel = obj.moistureLevel / 1023 * 100;
           }

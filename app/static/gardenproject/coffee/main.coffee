@@ -78,8 +78,6 @@ define (require) ->
                 .datum(data)
                 .transition().duration(500).call(chart)
 
-            
-
             nv.utils.windowResize(chart.update)
 
             chart.dispatch.on 'stateChange', (e) ->
@@ -103,15 +101,6 @@ define (require) ->
                 values: @gardenData.map (model) ->
                     x: moment.utc(model.get 'createdAt').unix()
                     y: model.get 'temperature'
-            ,
-
-                bar: false,
-                key: 'Moisture Normalized'
-                originalKey: 'Moisture Normalized'
-                values: @gardenData.map (model) ->
-                    n = model.get 'normalizedMoisture' 
-                    x: moment.utc(model.get 'createdAt').unix()
-                    y: if n then n else 0
             ]
 
             dataSets
