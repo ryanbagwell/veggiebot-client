@@ -59,8 +59,8 @@
         }).color(d3.scale.category10().domain([d3.min(times), d3.max(times)]).range());
         formatter = _.bind(function(d, i) {
           var m, t;
-          i = i ? i : d;
-          m = this.gardenData.at(i);
+          i = d ? d : i;
+          m = this.gardenData.at(d);
           t = m.get('createdAt');
           return moment(t).tz('America/Chicago').format("ddd, hA");
         }, this);

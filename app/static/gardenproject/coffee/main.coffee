@@ -56,8 +56,8 @@ define (require) ->
                 )
 
             formatter = _.bind (d, i) ->
-                i = if i then i else d
-                m = @gardenData.at(i)
+                i = if d then d else i
+                m = @gardenData.at(d)
                 t = m.get('createdAt')
                 moment(t).tz('America/Chicago').format("ddd, hA")
             , @ 
