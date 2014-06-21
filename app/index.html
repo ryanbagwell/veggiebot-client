@@ -21,7 +21,6 @@
         <h1>The VeggieBot</h1>
 
         <aside id="chart1" class="with-3d-shadow with-transitions">
-            <!-- <h3>Garden moisture</h3> -->
             <svg></svg>
         </aside>
 
@@ -32,8 +31,10 @@
 
 
         <script>
-            require(['main'], function(GardenProject) {
-                var gp = new GardenProject();
+            require(['jquery', 'gardenChart'], function($, GardenChart) {
+                var chart = new GardenChart({
+                    el: '#chart1 svg'
+                });
             });
         </script>
 

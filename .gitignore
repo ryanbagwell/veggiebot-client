@@ -1,2 +1,4 @@
 node_modules
 app/static/third-party
+app/static/gardenproject/js
+app/static/gardenproject/css

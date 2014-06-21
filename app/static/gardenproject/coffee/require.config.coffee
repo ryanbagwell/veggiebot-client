@@ -4,7 +4,7 @@ require.config
     paths:
         'jquery': [
             'https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min'
-            '../third-party/jquery/jquery'
+            '../../third-party/jquery/jquery'
         ]
         'backbone': '../../third-party/backbone/backbone'
         'underscore': '../../third-party/underscore/underscore-min'
@@ -13,10 +13,15 @@ require.config
         'moment':'../../third-party/moment/moment'
         'moment-timezone': '../../third-party/moment-timezone/moment-timezone'
         'underscore.string': '../../third-party/underscore.string/dist/underscore.string.min'
+        'Framework7': '../../third-party/framework7/dist/js/framework7.min'
 
+
+
+        gardenChart: 'gardenchart'
         main: 'main'
         gardenData: 'gardendata'
         tzdata: 'data.timezone'
+        mobile: 'mobile'
 
     shim:
         'jquery':
@@ -39,6 +44,9 @@ require.config
         'underscore.string':
             deps: ['underscore']
             exports: '_.str'
+        'Framework7':
+            exports: 'Framework7'
+
 
 
 

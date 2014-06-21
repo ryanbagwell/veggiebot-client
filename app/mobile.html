@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Required meta tags-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <title>VeggieBot</title>    
+    <link rel="stylesheet" href="static/third-party/framework7/dist/css/framework7.min.css" />
+
+    <link rel="stylesheet" href="static/third-party/nvd3/nv.d3.css" />
+
+    <link rel="stylesheet" href="static/gardenproject/css/mobile.css" />
+
+    <script src="static/third-party/requirejs/require.js"></script>
+    <script src="static/gardenproject/js/require.config.js"></script>
+   
+  </head>
+  
+  <body>
+
+    <div class="statusbar-overlay"></div>
+   
+    <div class="panel-overlay"></div>
+    
+    <div class="views tabs toolbar-through">
+
+      <div id="status-view" class="view view-main tab active">
+       
+        <div class="pages">
+         
+          <div data-page="status-page" class="page navbar-fixed">
+           
+            <div class="navbar">
+              <div class="navbar-inner">
+                <div class="center sliding">VeggieBot Status</div>
+              </div>
+            </div>
+
+            <div class="page-content">
+
+              <div class="content-block-title">Current Status</div>
+
+             <div class="list-block status-list">
+              
+              </div>
+              
+              <div class="content-block-title">History</div>
+              
+              <div class="content-block chart">
+                <svg></svg>
+              </div>
+            
+            </div>
+          
+          </div>
+        
+        </div>
+      
+      </div>
+
+
+      <div id="settings-view" class="view tab">
+ 
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="center sliding">Settings</div>
+          </div>
+        </div>
+
+        <div class="pages navbar-through">
+          <div data-page="index-2" class="page">
+            <div class="page-content">
+              <div class="content-block">
+                <p>This is a second view. Lets, for example, have here some internal pages with navbar navigation</p>
+              </div>
+              <div class="list-block">
+                <ul>
+                  <li><a href="about.html" class="item-link">
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">About Us</div>
+                      </div>
+                    </div></a>
+                  </li>
+                  <li><a href="services.html" class="item-link">
+                    <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">Services</div>
+                      </div>
+                    </div></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="toolbar tabbar tabbar-labels">
+
+        <div class="toolbar-inner">
+          
+          <a href="#status-view" class="tab-link active">
+            <i class="icon icon-chart"></i>
+            <span class="tabbar-label">Garden Status</span>
+          </a>
+
+          <a href="#settings-view" class="tab-link">
+            <i class="icon icon-settings"></i>
+            <span class="tabbar-label">Settings</span>
+          </a>
+     
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+      require(['mobile'], function(MobileApp) {
+        var m = new MobileApp({
+          views: {
+            settingsView: '#settings-view',
+            statusView: '#status-view'
+          }
+        });
+      });
+    </script>
+      
+  </body>
+</html>              
