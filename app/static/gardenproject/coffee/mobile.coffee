@@ -84,8 +84,7 @@ define (require) ->
 			@options = options
 			super(options)
 
-			@statusView = @addView @options.views.statusView,
-				dynamicNavbar: true
+			@statusView = @addView @options.views.statusView
 
 			currentStatusList = new CurrentStatusList
 				parentNode: @statusView.selector + ' .status-list'

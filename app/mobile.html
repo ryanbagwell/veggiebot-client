@@ -62,36 +62,56 @@
       </div>
 
 
-      <div id="settings-view" class="view tab">
+      <div id="settings-view" class="view view-main">
  
         <div class="navbar">
           <div class="navbar-inner">
             <div class="center sliding">Settings</div>
+
           </div>
         </div>
 
         <div class="pages navbar-through">
-          <div data-page="index-2" class="page">
+          
+          <div data-page="settings" class="page page-on-center">
+
             <div class="page-content">
-              <div class="content-block">
-                <p>This is a second view. Lets, for example, have here some internal pages with navbar navigation</p>
-              </div>
+
               <div class="list-block">
+                
                 <ul>
-                  <li><a href="about.html" class="item-link">
+
+                  <li>
                     <div class="item-content">
                       <div class="item-inner">
-                        <div class="item-title">About Us</div>
+                        <div class="item-title label">Pump Status</div>
+
+                        <select name="pumpStatus">
+                          <option value="on">On</option>
+                          <option value="off">Off</option>
+                          <option value="auto" selected>Auto</option>
+                        </select>
                       </div>
-                    </div></a>
+
+                    </div>
+                     
                   </li>
-                  <li><a href="services.html" class="item-link">
+
+                  <li>
                     <div class="item-content">
-                        <div class="item-inner">
-                          <div class="item-title">Services</div>
+                      <div class="item-inner">
+                        <div class="item-title label">Auto On Threshold</div>
+
+                        <div class="item-input">
+                          <div class="range-slider">
+                            <input type="range" min="0" max="100" step="10">
+                          </div>
+                        </div>
                       </div>
-                    </div></a>
+                    </div> 
+
                   </li>
+          
                 </ul>
               </div>
             </div>
