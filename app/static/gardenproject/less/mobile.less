@@ -1,20 +1,36 @@
+@active-blue: #007aff;
 
+.tab-link {
 
-.icon-settings {
-	background: url('../img/icon.settings.svg');
-	width: 30px;
-	height: 30px;
+	.icon-settings {
+		width: 30px;
+		height: 30px;
 
-}
+	}
 
-.icon-chart {
-	background: url('../img/icon.chart.svg');
-	width: 30px;
-	height: 30px;
+	.icon-chart {
+		
+		width: 30px;
+		height: 30px;
+	}
+
+	&.active {
+		svg {
+			path, circle {
+				fill: @active-blue;
+				stroke: @active-blue;
+			}
+
+			polyline {
+				stroke: @active-blue;
+			}
+		}
+	}
+
 }
 
 .chart {
-	
+
 	svg {
       height: 500px;
       margin: 10px;

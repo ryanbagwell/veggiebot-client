@@ -18,6 +18,7 @@
     "nvd3": "~1.1.15-beta",
     "bootstrap": "~3.1.1",
     "underscore.string": "~2.3.3",
-    "framework7": "~0.8.7"
+    "framework7": "~0.8.7",
+    "jquery.picplus": "~0.6.1"
   }
 }

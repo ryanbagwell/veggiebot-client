@@ -1,5 +1,6 @@
 define (require) ->
 	$ = require 'jquery'
+	require 'jquery.picplus'
 	Framework7 = require 'Framework7'
 	_ = require 'underscore'
 	Backbone = require 'backbone'
@@ -82,7 +83,12 @@ define (require) ->
 
 		constructor: (options) ->
 			@options = options
+
+			$('[data-picplus]').picplus()
+			
 			super(options)
+
+
 
 			@statusView = @addView @options.views.statusView
 

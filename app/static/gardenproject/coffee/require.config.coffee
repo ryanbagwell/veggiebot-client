@@ -14,6 +14,7 @@ require.config
         'moment-timezone': '../../third-party/moment-timezone/moment-timezone'
         'underscore.string': '../../third-party/underscore.string/dist/underscore.string.min'
         'Framework7': '../../third-party/framework7/dist/js/framework7.min'
+        'jquery.picplus': '../../third-party/jquery.picplus/jquery.picplus'
 
 
 
@@ -46,6 +47,8 @@ require.config
             exports: '_.str'
         'Framework7':
             exports: 'Framework7'
+        'jquery.picplus':
+            deps: ['jquery']
 
 
 
