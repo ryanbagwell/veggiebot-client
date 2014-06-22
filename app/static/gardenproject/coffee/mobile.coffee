@@ -207,10 +207,11 @@ define (require) ->
 				Parse.User.logIn creds.email, creds.password,
 					
 					success: (user) =>
-						$('.login').fadeOut 'fast', -> $(@).remove()
+						$('.login').fadeOut 'fast', ->
+							$(@).remove()
 
 					error: (user, error) =>
-						console.log user, error
+						@alert JSON.stringify(error), 'Error'
 
 		signUp: ->
 
