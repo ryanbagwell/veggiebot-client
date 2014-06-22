@@ -21,6 +21,7 @@ require.config
         gardenChart: 'gardenchart'
         main: 'main'
         gardenData: 'gardendata'
+        settingsData: 'settings.collection'
         tzdata: 'data.timezone'
         mobile: 'mobile'
 

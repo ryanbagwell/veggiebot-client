@@ -5,9 +5,10 @@ define (require) ->
 	_ = require 'underscore'
 	Backbone = require 'backbone'
 	GardenChart = require 'gardenChart'
-	GardenData = require 'gardenData'
 
-	#Export selectors engine
+	GardenData = require 'gardenData'
+	SettingsData = require 'settingsData'
+
 	$$ = Framework7.$
 
 
@@ -36,14 +37,7 @@ define (require) ->
 		initialize: (options) ->
 			@options = options
 
-			@gardenData = new GardenData()
-                
-			@gardenData.on 'reset', =>
-				@render(@options.parentNode)
-				
-				
-			@gardenData.fetch()
-
+			@render()
 
 		render: ->
 
@@ -51,25 +45,23 @@ define (require) ->
 
 			params = [
 					key: 'Moisture Level'
-					value: @gardenData.last().get('moistureLevel').toFixed(2) + '%'
+					value: @options.collection.last().get('moistureLevel').toFixed(2) + '%'
 				,
 					key: 'Soil Temperature'
-					value: @gardenData.last().get('temperature').toFixed(0) + '&deg;F'
+					value: @options.collection.last().get('temperature').toFixed(0) + '&deg;F'
 				,
 					key: 'Moisture Reading'
-					value: @gardenData.last().get('moistureReading').toFixed(0)
+					value: @options.collection.last().get('moistureReading').toFixed(0)
 				,
 					key: 'Moisture Volts'
-					value: @gardenData.last().get('moistureVolts').toFixed(2)
+					value: @options.collection.last().get('moistureVolts').toFixed(2)
 				,
 					key: 'Resistance (&#8486;)'
-					value: @gardenData.last().get('moistureOhms').toFixed(2)
+					value: @options.collection.last().get('moistureOhms').toFixed(2)
 				,
 					key: 'Resistance (k&#8486;)'
-					value: @gardenData.last().get('moistureKOhms').toFixed(2)
+					value: @options.collection.last().get('moistureKOhms').toFixed(2)
 			]
-
-			console.log params
 
 			_.each params, (status) =>
 
@@ -85,20 +77,62 @@ define (require) ->
 			@options = options
 
 			$('[data-picplus]').picplus()
-			
+
+			@settings = new SettingsData()
+
+			@settings.on 'reset', =>
+				@setSettingsView()
+
+			@settings.fetch()
+
+
+			@gardenData = new GardenData()
+                
+			@gardenData.on 'reset', =>
+				@setStatusView()
+					
+			@gardenData.fetch()
+
 			super(options)
-
-
+			
+		setStatusView: ->
 
 			@statusView = @addView @options.views.statusView
 
 			currentStatusList = new CurrentStatusList
 				parentNode: @statusView.selector + ' .status-list'
+				collection: @gardenData
 
 			@chart = new MobileGardenChart
 				el: $(@statusView.selector).find('.chart svg')
-				
+
+			
+		setSettingsView: ->
+
+			@settings.first()
+
+			$$('[name="pumpStatus"]').val @settings.first().get 'pumpStatus'
+			$$('[name="autoThreshold"]').val @settings.first().get 'autoThreshold'
+
 			@settingsView = @addView @options.views.settingsView
+
+
+			$$('[name="pumpStatus"]').on 'change', (e) =>
+				@settings.first().save
+					pumpStatus: $$(e.currentTarget).val()
+
+			$$('[name="autoThreshold"]').on 'change', (e) =>
+				@settings.first().save
+					autoThreshold: parseInt $$(e.currentTarget).val()
+				
+
+
+
+
+
+
+
+
 
 			
 
