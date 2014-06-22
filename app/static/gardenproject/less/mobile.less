@@ -1,4 +1,5 @@
 @active-blue: #007aff;
+@inactive-gray: #929292;
 
 .tab-link {
 
@@ -12,6 +13,20 @@
 		
 		width: 30px;
 		height: 30px;
+	}
+
+	svg {
+
+		path, circle {
+			stroke: @inactive-gray;
+			fill: @inactive-gray;
+		}
+
+		polyline {
+			stroke: @inactive-gray;
+		}
+
+
 	}
 
 	&.active {
