@@ -170,8 +170,10 @@ define (require) ->
 		saveCredentials: ->
 
 			data = 
-				email: $$('[name="email"]').val()
-				password: $$('[name="password"]').val()
+				email: $$('.login [name="email"]').val()
+				password: $$('.login [name="password"]').val()
+
+			console.log data
 
 			localStorage.setItem 'veggieBot', JSON.stringify(data)
 
@@ -183,6 +185,8 @@ define (require) ->
 
 		getCredentials: ->
 
+			@saveCredentials()
+
 			defaults =
 				email: ''
 				password: ''
@@ -193,7 +197,7 @@ define (require) ->
 				creds = JSON.parse(creds)
 			catch e
 				creds = {}
-			
+
 			_.extend defaults, creds
 
 
@@ -207,12 +211,17 @@ define (require) ->
 				Parse.User.logIn creds.email, creds.password,
 					
 					success: (user) =>
-				
+
 						$('.login').fadeOut 'fast', ->
 							$(@).remove()
 
 					error: (user, error) =>
-						@alert JSON.stringify(error), 'Error'
+						
+						@alert error.message, 'Error'
+
+						$$('.login').removeClass 'loading'
+
+
 
 		signUp: ->
 
