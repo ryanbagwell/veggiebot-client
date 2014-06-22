@@ -207,6 +207,7 @@ define (require) ->
 				Parse.User.logIn creds.email, creds.password,
 					
 					success: (user) =>
+				
 						$('.login').fadeOut 'fast', ->
 							$(@).remove()
 
