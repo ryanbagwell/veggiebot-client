@@ -118,7 +118,9 @@ define (require) ->
 				@gardenData.fetch
 					reset: true
 
-			@logIn()
+			$$('#login-form').on 'submit', (e) =>
+				e.preventDefault()
+				@logIn()
 
 			
 		setStatusView: ->
@@ -178,13 +180,6 @@ define (require) ->
 			user.set 'username', data.email
 			user.set 'password', data.password
 
-			user.signUp null,
-				success: (user) ->
-					console.log 'success'
-
-				error: (user, error) ->
-					console.log user, error
-
 
 		getCredentials: ->
 
@@ -208,11 +203,21 @@ define (require) ->
 
 			if creds.email and creds.password
 				Parse.User.logIn creds.email, creds.password,
-					success: (user) ->
-						console.log 'authenticated', user
+					
+					success: (user) =>
+						$('.login').fadeOut 'fast', -> $(@).remove()
 
-					error: (user, error)->
+					error: (user, error) =>
 						console.log user, error
+
+		signUp: ->
+
+			user.signUp null,
+				success: (user) ->
+					console.log 'success'
+
+				error: (user, error) ->
+					console.log user, error
 
 
 
