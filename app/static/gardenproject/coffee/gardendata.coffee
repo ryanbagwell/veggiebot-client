@@ -28,16 +28,14 @@ define (require) ->
             results = []
 
             _.map data.results, (obj) ->
-               
 
                 if obj.moistureLevel > 100
                     obj.moistureLevel = obj.moistureLevel / 1023 * 100
 
                 obj
 
-
-
         fetch: (options) ->
+
             defaults = 
                 reset: true
                 beforeSend: (xhr) ->
@@ -45,6 +43,9 @@ define (require) ->
                         '9NGEXKBz0x7p5SVPPXMbvMqDymXN5qCf387GpOE2'
                     xhr.setRequestHeader 'X-Parse-REST-API-Key',
                         'SDWvYNwDCPB6ImJ6eo1L28Nr5fzrA4fQysIdjz4Y'
-            super(defaults)
+
+            options = _.extend defaults, options
+            
+            super(options)
 
 

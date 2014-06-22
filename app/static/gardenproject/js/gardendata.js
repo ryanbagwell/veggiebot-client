@@ -53,7 +53,8 @@
             return xhr.setRequestHeader('X-Parse-REST-API-Key', 'SDWvYNwDCPB6ImJ6eo1L28Nr5fzrA4fQysIdjz4Y');
           }
         };
-        return DataCollection.__super__.fetch.call(this, defaults);
+        options = _.extend(defaults, options);
+        return DataCollection.__super__.fetch.call(this, options);
       };
 
       return DataCollection;

@@ -79,6 +79,9 @@ define (require) ->
 
 			@$el.appendTo @options.parentNode
 
+		remove: ->
+			@$el.remove()
+
 
 
 	class MobileApp extends Framework7
@@ -93,29 +96,41 @@ define (require) ->
 			@settings.on 'reset', =>
 				@setSettingsView()
 
-			@settings.fetch()
-
-
 			@gardenData = new GardenData()
                 
 			@gardenData.on 'reset', =>
 				@setStatusView()
-					
-			@gardenData.fetch()
 
 			super(options)
-			
-		setStatusView: ->
+
+			@settings.fetch()
+
+			@gardenData.fetch()
 
 			@statusView = @addView @options.views.statusView
 
-			currentStatusList = new CurrentStatusList
+			@settingsView = @addView @options.views.settingsView
+
+			$$('.pull-to-refresh-content').on 'refresh', =>
+				@gardenData.fetch()
+			
+		setStatusView: ->
+
+			if @currentStatusList
+				@currentStatusList.remove()
+
+			@currentStatusList = new CurrentStatusList
 				parentNode: @statusView.selector + ' .status-list'
 				collection: @gardenData
 
-			@chart = new MobileGardenChart
-				el: $(@statusView.selector).find('.chart svg')
+			if @chart
+				@chart.remove()
 
+			@chart = new MobileGardenChart
+				el: '.chart svg'
+				collection: @gardenData
+
+			@refreshDone()
 			
 		setSettingsView: ->
 
@@ -124,9 +139,6 @@ define (require) ->
 			$$('[name="pumpStatus"]').val @settings.first().get 'pumpStatus'
 			$$('[name="autoThreshold"]').val @settings.first().get 'autoThreshold'
 
-			@settingsView = @addView @options.views.settingsView
-
-
 			$$('[name="pumpStatus"]').on 'change', (e) =>
 				@settings.first().save
 					pumpStatus: $$(e.currentTarget).val()
@@ -134,6 +146,10 @@ define (require) ->
 			$$('[name="autoThreshold"]').on 'change', (e) =>
 				@settings.first().save
 					autoThreshold: parseInt $$(e.currentTarget).val()
+
+		refreshDone: ->
+
+			_.delay (=> @pullToRefreshDone()), 2000
 				
 
 

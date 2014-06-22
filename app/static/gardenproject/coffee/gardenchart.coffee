@@ -31,12 +31,17 @@ define (require) ->
 
             _.bindAll @, 'drawChart', 'getData'
 
-            @gardenData = new GardenData()
-                
-            @gardenData.on 'reset', =>
-                nv.addGraph(@drawChart)
+            @gardenData = @options.collection
+            super(options)
 
-            @gardenData.fetch()
+            @$el.appendTo('.chart')
+
+            console.log @el
+
+            _.delay =>
+                @drawChart()
+            , 2000
+
 
 
         drawChart: ->
@@ -112,3 +117,6 @@ define (require) ->
             ]
 
             dataSets
+
+        remove: ->
+            @$el.children().remove()
