@@ -199,6 +199,8 @@ define (require) ->
 
 		logIn: ->
 
+			$$('.login').addClass 'loading'
+
 			creds = @getCredentials()
 
 			if creds.email and creds.password
