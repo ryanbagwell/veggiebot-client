@@ -6,6 +6,10 @@ define (require) ->
 	Backbone = require 'backbone'
 	GardenChart = require 'gardenChart'
 
+	moment = require 'moment'
+	require 'moment-timezone'
+	require 'tzdata'
+
 	GardenData = require 'gardenData'
 	SettingsData = require 'settingsData'
 
@@ -61,6 +65,12 @@ define (require) ->
 				,
 					key: 'Resistance (k&#8486;)'
 					value: @options.collection.last().get('moistureKOhms').toFixed(2)
+				,
+					key: 'Last Updated'
+					value: (=>
+						t = @options.collection.last().get('createdAt')
+						moment(t).tz('America/Chicago').format('ddd, h:mm a')
+					)()
 			]
 
 			_.each params, (status) =>
