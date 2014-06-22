@@ -36,13 +36,9 @@ define (require) ->
 
             @$el.appendTo('.chart')
 
-            console.log @el
-
             _.delay =>
                 @drawChart()
             , 2000
-
-
 
         drawChart: ->
 

@@ -8,44 +8,30 @@ define (require) ->
     require 'moment-timezone'
     require 'tzdata'
 
+    Parse = require 'Parse'
 
-    class DataCollection extends Backbone.Collection
+
+    class SoilDataModel extends Parse.Object
+
+        className: "SoilData"
+
+
+    class DataCollection extends Parse.Collection
+
+        model: SoilDataModel
 
         initialize: (options) ->
 
             defaults = 
                 limit: 200
-                date: moment().subtract('days', 3).toISOString()
+                date: moment().subtract('days', 3)
 
             @options = _.extend defaults, options
 
-        url: ->
-            _.sprintf 'https://api.parse.com/1/classes/SoilData?limit=%(limit)s&order=createdAt&where={"updatedAt":{"$gt":{"__type":"Date", "iso":"%(date)s"}}}', @options
-          
+            @query = new Parse.Query SoilDataModel
+            @query.limit @options.limit
+            @query.ascending 'createdAt'
+            @query.greaterThan 'createdAt', new Date(@options.date)
 
-        parse: (data, xhr) ->
-            
-            results = []
-
-            _.map data.results, (obj) ->
-
-                if obj.moistureLevel > 100
-                    obj.moistureLevel = obj.moistureLevel / 1023 * 100
-
-                obj
-
-        fetch: (options) ->
-
-            defaults = 
-                reset: true
-                beforeSend: (xhr) ->
-                    xhr.setRequestHeader 'X-Parse-Application-Id',
-                        '9NGEXKBz0x7p5SVPPXMbvMqDymXN5qCf387GpOE2'
-                    xhr.setRequestHeader 'X-Parse-REST-API-Key',
-                        'SDWvYNwDCPB6ImJ6eo1L28Nr5fzrA4fQysIdjz4Y'
-
-            options = _.extend defaults, options
-            
             super(options)
-
 

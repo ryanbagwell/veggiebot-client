@@ -15,6 +15,7 @@ define (require) ->
 
 	$$ = Framework7.$
 
+	Parse = require 'Parse'
 
 	class MobileGardenChart extends GardenChart
 		
@@ -103,16 +104,22 @@ define (require) ->
 
 			super(options)
 
-			@settings.fetch()
+			@settings.fetch
+				reset: true
 
-			@gardenData.fetch()
+			@gardenData.fetch
+				reset: true
 
 			@statusView = @addView @options.views.statusView
 
 			@settingsView = @addView @options.views.settingsView
 
 			$$('.pull-to-refresh-content').on 'refresh', =>
-				@gardenData.fetch()
+				@gardenData.fetch
+					reset: true
+
+			@logIn()
+
 			
 		setStatusView: ->
 
@@ -134,10 +141,13 @@ define (require) ->
 			
 		setSettingsView: ->
 
-			@settings.first()
-
 			$$('[name="pumpStatus"]').val @settings.first().get 'pumpStatus'
+			
 			$$('[name="autoThreshold"]').val @settings.first().get 'autoThreshold'
+
+			$$('[name="email"]').val @getCredentials().email
+
+			$$('[name="password"]').val @getCredentials().password
 
 			$$('[name="pumpStatus"]').on 'change', (e) =>
 				@settings.first().save
@@ -147,10 +157,75 @@ define (require) ->
 				@settings.first().save
 					autoThreshold: parseInt $$(e.currentTarget).val()
 
+			$$('[name="email"], [name="password"]').on 'change', (e) =>
+				@saveCredentials()
+
 		refreshDone: ->
 
 			_.delay (=> @pullToRefreshDone()), 2000
 				
+
+		saveCredentials: ->
+
+			data = 
+				email: $$('[name="email"]').val()
+				password: $$('[name="password"]').val()
+
+			localStorage.setItem 'veggieBot', JSON.stringify(data)
+
+			user = new Parse.User()
+			user.set 'email', data.email
+			user.set 'username', data.email
+			user.set 'password', data.password
+
+			user.signUp null,
+				success: (user) ->
+					console.log 'success'
+
+				error: (user, error) ->
+					console.log user, error
+
+
+		getCredentials: ->
+
+			defaults =
+				email: ''
+				password: ''
+
+			creds = localStorage.getItem 'veggieBot'
+
+			try
+				creds = JSON.parse(creds)
+			catch e
+				creds = {}
+			
+			_.extend defaults, creds
+
+
+		logIn: ->
+
+			creds = @getCredentials()
+
+			if creds.email and creds.password
+				Parse.User.logIn creds.email, creds.password,
+					success: (user) ->
+						console.log 'authenticated', user
+
+					error: (user, error)->
+						console.log user, error
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

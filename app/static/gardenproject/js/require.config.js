@@ -12,6 +12,8 @@
       'underscore.string': '../../third-party/underscore.string/dist/underscore.string.min',
       'Framework7': '../../third-party/framework7/dist/js/framework7.min',
       'jquery.picplus': '../../third-party/jquery.picplus/jquery.picplus',
+      'parse.com': '../../third-party/parse.com/index',
+      Parse: 'lib.parse',
       gardenChart: 'gardenchart',
       main: 'main',
       gardenData: 'gardendata',
@@ -54,6 +56,9 @@
       },
       'jquery.picplus': {
         deps: ['jquery']
+      },
+      'parse.com': {
+        exports: 'Parse'
       }
     }
   });
