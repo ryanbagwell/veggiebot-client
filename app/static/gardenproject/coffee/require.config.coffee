@@ -18,15 +18,16 @@ require.config
         'parse.com': '../../third-party/parse.com/index'
 
         Parse: 'lib.parse'
+
         gardenChart: 'gardenchart'
         main: 'main'
+
         GardenData: 'collection.gardendata'
         CurrentStatusView: 'view.currentStatus'
-
-        settingsData: 'settings.collection'
-
+        UserSettings: 'collection.settings'
         SoilTextureCollection: 'collection.soiltexture'
         SoilTextureView: 'view.soiltexture'
+        SettingsView: 'view.settings'
 
         tzdata: 'data.timezone'
         mobile: 'mobile'

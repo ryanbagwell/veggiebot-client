@@ -3,11 +3,12 @@ define (require) ->
 	require 'jquery.picplus'
 	Framework7 = require 'Framework7'
 	_ = require 'underscore'
+	_.str = require 'underscore.string'
+	_.mixin _.str.exports()
+
 	Backbone = require 'backbone'
 	GardenChart = require 'gardenChart'
-
-	SoilTextureView = require 'SoilTextureView'
-
+	SettingsView = require 'SettingsView'
 
 
 	moment = require 'moment'
@@ -17,7 +18,6 @@ define (require) ->
 	CurrentStatusView = require 'CurrentStatusView'
 
 	GardenData = require 'GardenData'
-	SettingsData = require 'settingsData'
 
 	$$ = Framework7.$
 
@@ -34,32 +34,51 @@ define (require) ->
 
 	class MobileApp extends Framework7
 
-		constructor: (options) ->
-			@options = options
+		constructor: (@options) ->
+			super(options)
+
+			@user = Parse.User.current()
+
+			@initialize() if @user
+
+
+			$$('#guest-login').on 'click', (e) =>
+				e.preventDefault()
+				@logIn true
+
+			$$('#login button').on 'click', (e) =>
+				e.preventDefault()
+				@logIn false
+
+			$$('#log-out').on 'click', (e) =>
+				e.preventDefault()
+				@logOut()
+
+			$$(window).on 'ready', (e) ->
+				$('.login').fadeOut 500
+
+		initialize: ->
+
+			$$('.login').removeClass 'loading'
 
 			$('[data-picplus]').picplus()
-
-			@settings = new SettingsData()
-
-			@settings.on 'reset', =>
-				@setSettingsView()
 
 			@gardenData = new GardenData()
 
 			@gardenData.on 'reset', =>
 				@setStatusView()
-
-			super(options)
-
-			@settings.fetch
-				reset: true
+				@ready()
 
 			@gardenData.fetch
 				reset: true
 
-			@statusView = @addView @options.views.statusView
+			@settingsView = new SettingsView
+				el: $$(@options.views.settingsView)
 
-			@settingsView = @addView @options.views.settingsView
+			@addView @options.views.statusView
+
+			@addView @options.views.settingsView
+
 
 			$$('.pull-to-refresh-content').on 'refresh', =>
 				@gardenData.fetch
@@ -70,13 +89,18 @@ define (require) ->
 				@logIn()
 
 
+		ready: ->
+
+			$$(window).trigger 'ready'
+
+
 		setStatusView: ->
 
 			if @currentStatusList
 				@currentStatusList.remove()
 
 			@currentStatusList = new CurrentStatusView
-				parentNode: @statusView.selector + ' .status-list'
+				parentNode: @options.views.statusView + ' .status-list'
 				collection: @gardenData
 
 			@chart.remove() if @chart
@@ -86,24 +110,6 @@ define (require) ->
 				collection: @gardenData
 
 			@refreshDone()
-
-		setSettingsView: ->
-
-			@soilTextureView = new SoilTextureView
-				el: $$('.list-block.soil-textures')
-
-			$$('[name="pumpStatus"]').val @settings.first().get 'pumpStatus'
-
-			$$('[name="autoThreshold"]').val @settings.first().get 'autoThreshold'
-
-			$$('[name="pumpStatus"]').on 'change', (e) =>
-				@settings.first().save
-					pumpStatus: $$(e.currentTarget).val()
-
-			$$('[name="autoThreshold"]').on 'change', (e) =>
-				@settings.first().save
-					autoThreshold: parseInt $$(e.currentTarget).val()
-
 
 		refreshDone: ->
 
@@ -126,9 +132,6 @@ define (require) ->
 			user.set 'password', data.password
 
 
-
-
-
 		getCredentials: ->
 
 			@saveCredentials()
@@ -147,39 +150,38 @@ define (require) ->
 			_.extend defaults, creds
 
 
-
-
-		logIn: ->
+		logIn: (guest) ->
 
 			$$('.login').addClass 'loading'
 
-			creds = @getCredentials()
+			if guest
+				creds =
+					email: 'guest@guest.com'
+					password: 'guest'
+			else
+				creds = @getCredentials()
 
-			if creds.email and creds.password
-				Parse.User.logIn creds.email, creds.password,
+			Parse.User.logIn creds.email, creds.password,
+				success: (user) =>
+					@loginSuccess(user)
+				error: (user, error) =>
+					@loginError(user, error)
 
-					success: (user) =>
+		loginSuccess: (user) ->
 
-						$('.login').fadeOut 'fast', ->
-							$(@).remove()
-
-					error: (user, error) =>
-						console.log error
-
-						@alert error.message, 'Error'
-
-						$$('.login').removeClass 'loading'
+			@initialize()
 
 
+		loginError: (user, error) ->
 
-		signUp: ->
+			@alert _.titleize(error.message), 'Error'
 
-			user.signUp null,
-				success: (user) ->
-					console.log 'success'
+			$$('.login').removeClass 'loading'
 
-				error: (user, error) ->
-					console.log user, error
+		logOut: ->
+
+			Parse.User.logOut()
+			$('.login').fadeIn 500
 
 
 

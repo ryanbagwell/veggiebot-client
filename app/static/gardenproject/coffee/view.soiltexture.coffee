@@ -3,50 +3,53 @@ define (require) ->
     _ = require 'underscore'
     Backbone = require 'backbone'
 
-    SoilTextureCollection = require 'SoilTextureCollection'
-
 
     class SoilTextureView extends Backbone.View
 
         selected: null
 
         events:
-            'change select[name="soilTexture"]': 'change'
+            'change select[name="soilTexture"]': 'updateSoilComposition'
 
         initialize: (@options) ->
-
-            @collection = new SoilTextureCollection()
-
-            @collection.on 'reset', =>
-                @render()
-
-            @collection.fetch()
+            @render()
 
         render: ->
 
             optionTemplate = '<option value="<%= id %>"><%= name %></option>'
 
-            @collection.each (model) =>
+            @options.collection.each (model) =>
 
-              option = _.template optionTemplate,
-                  id: model.id
-                  name: model.get 'name'
+                option = _.template optionTemplate,
+                    id: model.id
+                    name: model.get 'name'
 
-              @$el.find('select[name="soilTexture"]').append option
+                $option = $(option)
 
-        change: (e) ->
+                if model.id is @options.initial.id
+                    $option.attr 'selected', ''
 
-            selectedId = $(e.currentTarget).val()
+                $option.appendTo('select[name="soilTexture"]')
 
-            selectedTexture = @collection.get selectedId
 
-            @$el.find('[name="clayContent"]').val selectedTexture.get('avgClay')
+            @updateSoilComposition()
 
-            @$el.find('[name="siltContent"]').val selectedTexture.get('avgSilt')
 
-            @$el.find('[name="sandContent"]').val selectedTexture.get('avgSand')
+        updateSoilComposition: (e) ->
 
-        updateSelected: () ->
+            selectedId = $('select[name="soilTexture"]').val()
+
+            @selectedTexture = @options.collection.get selectedId
+
+            @$el.find('[name="clayContent"]').val @selectedTexture.get('avgClay')
+
+            @$el.find('[name="siltContent"]').val @selectedTexture.get('avgSilt')
+
+            @$el.find('[name="sandContent"]').val @selectedTexture.get('avgSand')
+
+            @trigger 'changed', @selectedTexture
+
+
 
 
 

@@ -89,6 +89,8 @@
 
             <div class="page-content">
 
+              <div class="content-block-title">Irrigation Settings</div>
+
               <div class="list-block">
 
                 <ul>
@@ -112,11 +114,11 @@
                   <li>
                     <div class="item-content">
                       <div class="item-inner">
-                        <div class="item-title label">Auto On</div>
+                        <div class="item-title label">Auto On - <span></span></div>
 
                         <div class="item-input">
                           <div class="range-slider">
-                            <input name="autoThreshold" type="range" min="0" max="100" step="10">
+                            <input name="autoThreshold" type="range" min="0" max="100" step="1" />
                           </div>
                         </div>
                       </div>
@@ -128,6 +130,8 @@
 
                 </ul>
               </div>
+
+              <div class="content-block-title">Soil Settings</div>
 
               <div class="list-block soil-textures">
 
@@ -177,7 +181,10 @@
                   </li>
                 </ul>
 
+              </div>
 
+              <div class="content-block">
+                <a id="log-out" href="#" class="button button-big button-cancel">Sign Out</a>
               </div>
 
             </div>
@@ -211,7 +218,7 @@
 
     </div>
 
-   <!--  <div class="login">
+    <div id="login" class="login">
 
       <h1>VeggieBot</h1>
 
@@ -221,25 +228,12 @@
         <input type="text" name="email" placeholder="Email" />
         <input type="password" name="password" placeholder="Password" />
         <button>Log In</button>
+
+        <a id="guest-login" href="#">or sign in as a guest &raquo;</a>
+
       </form>
 
     </div>
-
-    <div class="sign-up">
-
-      <h1>VeggieBot</h1>
-
-      <img class="splash-icon" src="static/gardenproject/img/icon.tomato.png" />
-
-      <form id="login-form">
-        <input type="text" name="firstName" placeholder="First Name" />
-        <input type="text" name="lastName" placeholder="Last Name" />
-        <input type="text" name="email" placeholder="Email" />
-        <input type="password" name="password" placeholder="Password" />
-        <button>Sign Up</button>
-      </form>
-
-    </div> -->
 
     <script>
       require(['mobile'], function(MobileApp) {
