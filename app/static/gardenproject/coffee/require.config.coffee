@@ -21,6 +21,8 @@ require.config
         gardenChart: 'gardenchart'
         main: 'main'
         GardenData: 'collection.gardendata'
+        CurrentStatusView: 'view.currentStatus'
+
         settingsData: 'settings.collection'
 
         SoilTextures: 'collection.soiltextures'
