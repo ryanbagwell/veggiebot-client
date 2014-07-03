@@ -22,16 +22,34 @@ define (require) ->
 
         initialize: (options) ->
 
-            defaults = 
-                limit: 200
-                date: moment().subtract('days', 3)
+            defaults =
+                query:
+                    limit: [200]
+                    #greaterThan: ['createdAt', new Date(moment().subtract('days', 3))]
+                    descending: ['createdAt']
+                    greaterThan: ['temperature', 0]
 
             @options = _.extend defaults, options
 
             @query = new Parse.Query SoilDataModel
-            @query.limit @options.limit
-            @query.ascending 'createdAt'
-            @query.greaterThan 'createdAt', new Date(@options.date)
+
+            for k, v of @options.query
+
+                try
+                    @query[k].apply(@query, v)
+                catch e
 
             super(options)
+
+        comparator: (m1, m2) ->
+
+            t1 = moment(m1.createdAt).unix()
+
+            t2 = moment(m2.createdAt).unix()
+
+            return if t1 > t2 then 1 else -1
+
+
+
+
 

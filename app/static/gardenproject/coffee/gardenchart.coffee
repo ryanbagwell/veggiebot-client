@@ -31,14 +31,17 @@ define (require) ->
 
             _.bindAll @, 'drawChart', 'getData'
 
-            @gardenData = @options.collection
             super(options)
 
             @$el.appendTo('.chart')
 
-            _.delay =>
+            @gardenData = new GardenData()
+
+            @gardenData.on 'reset', =>
                 @drawChart()
-            , 2000
+
+            @gardenData.fetch()
+
 
         drawChart: ->
 
@@ -59,17 +62,16 @@ define (require) ->
                         .range()
                 )
 
-            formatter = _.bind (d, i) ->
+            formatter = (d, i) =>
                 i = if d then d else i
-                m = @gardenData.at(d)
-                t = m.get('createdAt')
+                m = @gardenData.at(i)
 
-                if moment(t).format("mm") is '00'
-                    formatStr = "ddd, h a"
+                if moment(m.createdAt).format("mm") is '00'
+                    formatStr = "ddd (M/D), h a"
                 else
-                    formatStr = "ddd, h:mm a"
-                moment(t).tz('America/Chicago').format(formatStr)
-            , @ 
+                    formatStr = "ddd (M/D), h:mm a"
+
+                moment(m.createdAt).tz('America/Chicago').format(formatStr)
 
             chart.xAxis.tickFormat(formatter).showMaxMin(false);
 

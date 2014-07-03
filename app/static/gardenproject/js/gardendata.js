@@ -37,17 +37,37 @@
       DataCollection.prototype.model = SoilDataModel;
 
       DataCollection.prototype.initialize = function(options) {
-        var defaults;
+        var defaults, e, k, v, _ref2;
         defaults = {
-          limit: 200,
-          date: moment().subtract('days', 3)
+          query: {
+            limit: [200],
+            descending: ['createdAt'],
+            greaterThan: ['temperature', 0]
+          }
         };
         this.options = _.extend(defaults, options);
         this.query = new Parse.Query(SoilDataModel);
-        this.query.limit(this.options.limit);
-        this.query.ascending('createdAt');
-        this.query.greaterThan('createdAt', new Date(this.options.date));
+        _ref2 = this.options.query;
+        for (k in _ref2) {
+          v = _ref2[k];
+          try {
+            this.query[k].apply(this.query, v);
+          } catch (_error) {
+            e = _error;
+          }
+        }
         return DataCollection.__super__.initialize.call(this, options);
+      };
+
+      DataCollection.prototype.comparator = function(m1, m2) {
+        var t1, t2;
+        t1 = moment(m1.createdAt).unix();
+        t2 = moment(m2.createdAt).unix();
+        if (t1 > t2) {
+          return 1;
+        } else {
+          return -1;
+        }
       };
 
       return DataCollection;
