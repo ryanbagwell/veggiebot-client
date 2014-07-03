@@ -22,6 +22,9 @@ require.config
         main: 'main'
         gardenData: 'gardendata'
         settingsData: 'settings.collection'
+
+        SoilTextures: 'collection.soiltextures'
+
         tzdata: 'data.timezone'
         mobile: 'mobile'
 

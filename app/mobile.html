@@ -125,30 +125,74 @@
                   </li>
 
 
-                  <li>
-                    <div class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title label">Email</div>
-                        <div class="item-input">
-                          <input name="email" type="text">
-                        </div> 
-                      </div>
-                    </div> 
-                  </li>
-
-                  <li>
-                    <div class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title label">Password</div>
-                        <div class="item-input">
-                          <input name="password" type="password">
-                        </div> 
-                      </div>
-                    </div> 
-                  </li>
 
                 </ul>
               </div>
+
+              <div class="list-block">
+                
+                <ul>
+
+                  <li>
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Soil Type</div>
+
+                        <select name="soilTexture">
+                        <!--   <option value="sand">Sand</option>
+                          <option value="loamy sand">Loamy Sand</option>
+                          <option value="sandy loam">Sandy Loam</option>
+                          <option value="sandy clay loam">Sandy Clay Loam</option>
+                          <option value="loam" selected>Loam</option>
+                          <option value="sandy clay">Sandy Clay</option>
+                          <option value="silt loam">Silt Loam</option>
+                          <option value="silt">Silt</option>
+                          <option value="clay loam">Clay Loam</option>
+                          <option value="silty clay loam">Silty Clay Loam</option>
+                          <option value="silty clay">Silty Clay</option>
+                          <option value="Clay">Clay</option> -->
+                        </select>
+                      </div>
+
+                    </div>
+                     
+                  </li>
+
+                  <li>
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">% Clay</div>
+                        <div class="item-input">
+                          <input type="text" name="clayContent">
+                        </div> 
+                      </div>
+                  </li>
+
+                  <li>
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">% Silt</div>
+                        <div class="item-input">
+                          <input type="text" name="siltContent">
+                        </div> 
+                      </div>
+                  </li>
+
+
+                  <li>
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">% Sand</div>
+                        <div class="item-input">
+                          <input type="text" name="sandContent">
+                        </div> 
+                      </div>
+                  </li>
+                </ul>
+
+
+              </div>
+            
             </div>
           </div>
         </div>
@@ -180,7 +224,7 @@
 
     </div>
 
-    <div class="login">
+   <!--  <div class="login">
       
       <h1>VeggieBot</h1>
 
@@ -193,6 +237,22 @@
       </form>
 
     </div>
+
+    <div class="sign-up">
+      
+      <h1>VeggieBot</h1>
+
+      <img class="splash-icon" src="static/gardenproject/img/icon.tomato.png" />
+
+      <form id="login-form">
+        <input type="text" name="firstName" placeholder="First Name" />
+        <input type="text" name="lastName" placeholder="Last Name" />
+        <input type="text" name="email" placeholder="Email" />
+        <input type="password" name="password" placeholder="Password" />
+        <button>Sign Up</button>
+      </form>
+
+    </div> -->
 
     <script>
       require(['mobile'], function(MobileApp) {
