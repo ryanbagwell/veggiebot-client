@@ -4,7 +4,7 @@ define (require) ->
     Backbone = require 'backbone'
     d3 = require 'd3'
     nv = require 'nvd3'
-    GardenData = require 'gardenData'
+    GardenData = require 'GardenData'
     moment = require 'moment'
     require 'moment-timezone'
     require 'tzdata'

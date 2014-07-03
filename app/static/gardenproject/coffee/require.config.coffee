@@ -20,7 +20,7 @@ require.config
         Parse: 'lib.parse'
         gardenChart: 'gardenchart'
         main: 'main'
-        gardenData: 'gardendata'
+        GardenData: 'collection.gardendata'
         settingsData: 'settings.collection'
 
         SoilTextures: 'collection.soiltextures'

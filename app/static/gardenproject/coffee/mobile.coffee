@@ -12,7 +12,7 @@ define (require) ->
 	require 'moment-timezone'
 	require 'tzdata'
 
-	GardenData = require 'gardenData'
+	GardenData = require 'GardenData'
 	SettingsData = require 'settingsData'
 
 	$$ = Framework7.$
@@ -20,7 +20,7 @@ define (require) ->
 	Parse = require 'Parse'
 
 	class MobileGardenChart extends GardenChart
-		
+
 		margins:
             top: 30
             right: 30
@@ -106,7 +106,7 @@ define (require) ->
 				@setSettingsView()
 
 			@gardenData = new GardenData()
-                
+
 			@gardenData.on 'reset', =>
 				@setStatusView()
 
@@ -133,7 +133,7 @@ define (require) ->
 				e.preventDefault()
 				@logIn()
 
-			
+
 		setStatusView: ->
 
 			if @currentStatusList
@@ -151,11 +151,11 @@ define (require) ->
 				collection: @gardenData
 
 			@refreshDone()
-			
+
 		setSettingsView: ->
 
 			$$('[name="pumpStatus"]').val @settings.first().get 'pumpStatus'
-			
+
 			$$('[name="autoThreshold"]').val @settings.first().get 'autoThreshold'
 
 			$$('[name="email"]').val @getCredentials().email
@@ -196,7 +196,7 @@ define (require) ->
 
 			@soilTextures.each (model) =>
 
-				option = _.template template, 
+				option = _.template template,
 					id: model.id
 					name: model.get 'name'
 
@@ -212,11 +212,11 @@ define (require) ->
 		refreshDone: ->
 
 			_.delay (=> @pullToRefreshDone()), 2000
-				
+
 
 		saveCredentials: ->
 
-			data = 
+			data =
 				email: $$('.login [name="email"]').val()
 				password: $$('.login [name="password"]').val()
 
@@ -261,7 +261,7 @@ define (require) ->
 
 			if creds.email and creds.password
 				Parse.User.logIn creds.email, creds.password,
-					
+
 					success: (user) =>
 
 						$('.login').fadeOut 'fast', ->
@@ -269,7 +269,7 @@ define (require) ->
 
 					error: (user, error) =>
 						console.log error
-						
+
 						@alert error.message, 'Error'
 
 						$$('.login').removeClass 'loading'
@@ -306,13 +306,13 @@ define (require) ->
 
 
 
-			
 
 
 
-		
 
-			
+
+
+
 
 
 
