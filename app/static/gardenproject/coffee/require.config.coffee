@@ -25,7 +25,8 @@ require.config
 
         settingsData: 'settings.collection'
 
-        SoilTextures: 'collection.soiltextures'
+        SoilTextureCollection: 'collection.soiltexture'
+        SoilTextureView: 'view.soiltexture'
 
         tzdata: 'data.timezone'
         mobile: 'mobile'

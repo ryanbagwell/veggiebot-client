@@ -3,15 +3,15 @@
   <head>
     <!-- Required meta tags-->
     <meta charset="utf-8">
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-    
+
     <meta name="apple-mobile-web-app-capable" content="yes">
-    
+
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-    <title>VeggieBot</title>    
-    
+    <title>VeggieBot</title>
+
     <link rel="apple-touch-icon" href="static/gardenproject/img/icon.tomato.png" />
     <link rel="apple-touch-icon" sizes="76x76" href="static/gardenproject/img/icon.tomato.png">
     <link rel="apple-touch-icon" sizes="120x120" href="static/gardenproject/img/icon.tomato.png">
@@ -25,23 +25,23 @@
 
     <script src="static/third-party/requirejs/require.js"></script>
     <script src="static/gardenproject/js/require.config.js"></script>
-   
+
   </head>
-  
+
   <body>
 
     <div class="statusbar-overlay"></div>
-   
+
     <div class="panel-overlay"></div>
-    
+
     <div class="views tabs toolbar-through">
 
       <div id="status-view" class="view view-main tab active">
-       
+
         <div class="pages">
-         
+
           <div data-page="status-page" class="page navbar-fixed">
-           
+
             <div class="navbar">
               <div class="navbar-inner">
                 <div class="center sliding">VeggieBot Status</div>
@@ -58,24 +58,24 @@
                 <div class="content-block-title">Current Status</div>
 
                 <div class="list-block status-list"></div>
-              
+
                 <div class="content-block-title">History</div>
-              
+
                 <div class="content-block chart">
                   <svg></svg>
                 </div>
-            
+
             </div>
-          
+
           </div>
-        
+
         </div>
-      
+
       </div>
 
 
       <div id="settings-view" class="view tab">
- 
+
         <div class="navbar">
           <div class="navbar-inner">
             <div class="center sliding">Settings</div>
@@ -84,13 +84,13 @@
         </div>
 
         <div class="pages navbar-through">
-          
+
           <div data-page="settings" class="page page-on-center">
 
             <div class="page-content">
 
               <div class="list-block">
-                
+
                 <ul>
 
                   <li>
@@ -106,7 +106,7 @@
                       </div>
 
                     </div>
-                     
+
                   </li>
 
                   <li>
@@ -120,7 +120,7 @@
                           </div>
                         </div>
                       </div>
-                    </div> 
+                    </div>
 
                   </li>
 
@@ -129,8 +129,8 @@
                 </ul>
               </div>
 
-              <div class="list-block">
-                
+              <div class="list-block soil-textures">
+
                 <ul>
 
                   <li>
@@ -138,24 +138,11 @@
                       <div class="item-inner">
                         <div class="item-title label">Soil Type</div>
 
-                        <select name="soilTexture">
-                        <!--   <option value="sand">Sand</option>
-                          <option value="loamy sand">Loamy Sand</option>
-                          <option value="sandy loam">Sandy Loam</option>
-                          <option value="sandy clay loam">Sandy Clay Loam</option>
-                          <option value="loam" selected>Loam</option>
-                          <option value="sandy clay">Sandy Clay</option>
-                          <option value="silt loam">Silt Loam</option>
-                          <option value="silt">Silt</option>
-                          <option value="clay loam">Clay Loam</option>
-                          <option value="silty clay loam">Silty Clay Loam</option>
-                          <option value="silty clay">Silty Clay</option>
-                          <option value="Clay">Clay</option> -->
-                        </select>
+                        <select name="soilTexture"></select>
                       </div>
 
                     </div>
-                     
+
                   </li>
 
                   <li>
@@ -164,7 +151,7 @@
                         <div class="item-title label">% Clay</div>
                         <div class="item-input">
                           <input type="text" name="clayContent">
-                        </div> 
+                        </div>
                       </div>
                   </li>
 
@@ -174,7 +161,7 @@
                         <div class="item-title label">% Silt</div>
                         <div class="item-input">
                           <input type="text" name="siltContent">
-                        </div> 
+                        </div>
                       </div>
                   </li>
 
@@ -185,14 +172,14 @@
                         <div class="item-title label">% Sand</div>
                         <div class="item-input">
                           <input type="text" name="sandContent">
-                        </div> 
+                        </div>
                       </div>
                   </li>
                 </ul>
 
 
               </div>
-            
+
             </div>
           </div>
         </div>
@@ -203,7 +190,7 @@
       <div class="toolbar tabbar tabbar-labels">
 
         <div class="toolbar-inner">
-          
+
           <a href="#status-view" class="tab-link active">
             <i class="icon icon-chart">
               <span data-loader="inline-svg" data-picplus data-src="static/gardenproject/img/icon.chart.svg" />
@@ -217,7 +204,7 @@
             </i>
             <span class="tabbar-label">Settings</span>
           </a>
-     
+
         </div>
 
       </div>
@@ -225,7 +212,7 @@
     </div>
 
    <!--  <div class="login">
-      
+
       <h1>VeggieBot</h1>
 
       <img class="splash-icon" src="static/gardenproject/img/icon.tomato.png" />
@@ -239,7 +226,7 @@
     </div>
 
     <div class="sign-up">
-      
+
       <h1>VeggieBot</h1>
 
       <img class="splash-icon" src="static/gardenproject/img/icon.tomato.png" />
@@ -264,6 +251,6 @@
         });
       });
     </script>
-      
+
   </body>
-</html>              
+</html>

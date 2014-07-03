@@ -133,6 +133,8 @@ define (require) ->
 
 		setSoilTexturesList: ->
 
+
+
 			template = '<option value="<%= id %>"><%= name %></option>'
 
 			@soilTextures.each (model) =>
