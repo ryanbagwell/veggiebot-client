@@ -26,8 +26,9 @@ define (require) ->
 
                 $option = $(option)
 
-                if model.id is @options.initial.id
-                    $option.attr 'selected', ''
+                if @options.initial
+                    if model.id is @options.initial.id
+                        $option.attr 'selected', ''
 
                 $option.appendTo('select[name="soilTexture"]')
 

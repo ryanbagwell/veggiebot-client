@@ -13,7 +13,6 @@ define (require) ->
             'change [name="pumpStatus"]': 'save'
             'change [name="autoThreshold"]': 'save'
             'change [name="soilTexture"]': 'save'
-            'change [name="autoThreshold"]': 'updateSliderValue'
 
         initialize: ->
             super()
@@ -63,7 +62,9 @@ define (require) ->
             @soilTextureView.on 'changed', (selectedTexture) =>
 
                 @$el.find('[name="autoThreshold"]').val selectedTexture.get('wateringPoint')
-                @updateSliderValue()
+
+            @$el.find('[name="autoThreshold"]').on 'change', (e) =>
+                @updateSliderValue(e)
 
         save: (e) ->
 
