@@ -6,7 +6,9 @@ define (require) ->
 	Backbone = require 'backbone'
 	GardenChart = require 'gardenChart'
 
-	SoilTextures = require 'SoilTextures'
+	SoilTextureView = require 'SoilTextureView'
+
+
 
 	moment = require 'moment'
 	require 'moment-timezone'
@@ -37,11 +39,6 @@ define (require) ->
 
 			$('[data-picplus]').picplus()
 
-			@soilTextures = new SoilTextures()
-
-			@soilTextures.on 'reset', =>
-				@setSoilTexturesList()
-
 			@settings = new SettingsData()
 
 			@settings.on 'reset', =>
@@ -58,9 +55,6 @@ define (require) ->
 				reset: true
 
 			@gardenData.fetch
-				reset: true
-
-			@soilTextures.fetch
 				reset: true
 
 			@statusView = @addView @options.views.statusView
@@ -95,13 +89,12 @@ define (require) ->
 
 		setSettingsView: ->
 
+			@soilTextureView = new SoilTextureView
+				el: $$('.list-block.soil-textures')
+
 			$$('[name="pumpStatus"]').val @settings.first().get 'pumpStatus'
 
 			$$('[name="autoThreshold"]').val @settings.first().get 'autoThreshold'
-
-			$$('[name="email"]').val @getCredentials().email
-
-			$$('[name="password"]').val @getCredentials().password
 
 			$$('[name="pumpStatus"]').on 'change', (e) =>
 				@settings.first().save
@@ -110,46 +103,6 @@ define (require) ->
 			$$('[name="autoThreshold"]').on 'change', (e) =>
 				@settings.first().save
 					autoThreshold: parseInt $$(e.currentTarget).val()
-
-			$$('[name="soilTexture"]').on 'change', (e) =>
-
-				soilTextureClass = Parse.Object.extend('SoilTexture')
-
-				newSoilTextureSetting = new Parse.Query(soilTextureClass).get $$(e.currentTarget).val()
-
-				# console.log newSoilTextureSetting
-
-				#console.log newSoilTextureSetting.settings
-
-				@settings.first().save
-					soilTexture: newSoilTextureSetting
-
-
-			$$('[name="email"], [name="password"]').on 'change', (e) =>
-				@saveCredentials()
-
-
-
-
-		setSoilTexturesList: ->
-
-
-
-			template = '<option value="<%= id %>"><%= name %></option>'
-
-			@soilTextures.each (model) =>
-
-				option = _.template template,
-					id: model.id
-					name: model.get 'name'
-
-				console.log @settings.first().get('soilTexture')
-
-				# if @settings.first().get('soilTexture').id == model.id
-				# 	console.log 'ahhhhhhh'
-				# 	$(option).attr 'selected', ''
-
-				$$('select[name="soilTexture"]').append option
 
 
 		refreshDone: ->
