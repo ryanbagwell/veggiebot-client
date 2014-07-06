@@ -32,10 +32,10 @@ define (require) ->
                     key: 'Soil Temperature'
                     value: @options.collection.last().get('temperature').toFixed(0) + '&deg;F'
                 ,
-                    key: 'Moisture Reading'
-                    value: @options.collection.last().get('moistureReading').toFixed(0)
+                    key: 'Moisture kPa'
+                    value: @options.collection.last().get('moistureKPa').toFixed(2)
                 ,
-                    key: 'Moisture Volts'
+                    key: 'Sensor Voltage'
                     value: @options.collection.last().get('moistureVolts').toFixed(2)
                 ,
                     key: 'Resistance (&#8486;)'
@@ -44,7 +44,7 @@ define (require) ->
                     key: 'Resistance (k&#8486;)'
                     value: @options.collection.last().get('moistureKOhms').toFixed(2)
                 ,
-                    key: 'Last Updated'
+                    key: 'Last Measurement'
                     value: (=>
                         t = @options.collection.last().createdAt
                         moment(t).tz('America/Chicago').format('ddd (M/D), h:mm a')
