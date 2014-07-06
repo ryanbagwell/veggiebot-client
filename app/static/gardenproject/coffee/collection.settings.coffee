@@ -34,25 +34,7 @@ define (require) ->
                     @query[k].apply(@query, v)
                 catch e
 
-            #@on 'reset', =>
-                #@createForUser()
-
             super(@options)
-
-        # fetch: ->
-        #     super()
-        #     console.log @
-
-
-        # parse: ->
-        #     console.log arguments
-
-        #     # return unless @length is 0
-
-        #     # @settings.create
-        #     #     user: Parse.User.current()
-
-        #     # @settings.first().save()
 
 
 
